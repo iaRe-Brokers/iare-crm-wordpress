@@ -25,12 +25,14 @@ Plugin WordPress para integração completa com o sistema iaRe CRM, permitindo c
 - Log de erros e monitoramento
 - Arquitetura extensível com hooks e filtros
 
-## 📋 Requisitos
+## 📋 **Requisitos**
 
-- WordPress 6.0 ou superior
-- PHP 7.4 ou superior
-- Conta válida no iaRe CRM com acesso à API
-- Elementor (para integração de formulários)
+| Componente | Versão Mínima | Recomendado |
+|------------|---------------|-------------|
+| WordPress | 6.0 | 6.8+ |
+| PHP | 7.4 | 8.1+ |
+| MySQL | 5.7 | 8.0+ |
+| Elementor | 3.8 | Última versão |
 
 ## 📦 Instalação
 
@@ -79,33 +81,28 @@ add_filter('iare_crm_api_request', 'filtrar_api_request');
 
 ## ❓ Perguntas Frequentes
 
+**O que é iaRe CRM?**	
+
+**Como ser parceiro da iaRe?**
+
 **Preciso de uma conta no iaRe CRM?**
-Sim, você precisa de uma conta válida e chave de API. Entre em contato com o iaRe CRM para configuração.
 
-**O plugin é gratuito?**
-Sim, o plugin é gratuito. Você precisa apenas de uma conta no iaRe CRM.
+Sim, você precisa de uma conta válida e chave de API, que pode ser obtida através do das configurações do iaRe CRM.
 
-**Funciona com outros construtores de página?**
+**Tem integração com outros plugins?**
+
 Atualmente suportamos Elementor nativamente. Outras integrações podem ser adicionadas no futuro.
-
-**É compatível com WooCommerce?**
-A integração com WooCommerce está em desenvolvimento e será lançada em breve.
-
-## 📄 Licença
-
-Este projeto está licenciado sob a GPL v2 - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
-## 🏆 Créditos
-
-Desenvolvido pela equipe iaRe CRM.
 
 ---
 
-<p align="center">
-  <strong>🚀 Transforme visitantes em leads com iaRe CRM!</strong>
-</p>
+<div align="center">
 
-<p align="center">
-  <a href="https://iare.me/seja-parceiro">Seja Parceiro</a> • 
-  <a href="https://iarebrokers.com.br">iaRe Brokers</a> • 
-</p> 
+### 🚀 **Transforme visitantes em leads com iaRe CRM!**
+
+**Comece hoje mesmo a potencializar seus resultados**
+
+[**🌐 iaRe Brokers**](https://iarebrokers.com.br) | [**🤝 Seja Parceiro**](https://iare.me/seja-parceiro)
+
+</div>
+
+---
