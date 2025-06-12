@@ -1,7 +1,6 @@
 <?php
 /**
  * Plugin Name: iaRe CRM
- * Plugin URI: https://crm.iare.me
  * Description: Complete integration with iaRe CRM system for lead capture and management
  * Version: 1.0.0
  * Author: iaRe CRM
