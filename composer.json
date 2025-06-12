@@ -1,0 +1,35 @@
+{
+    "name": "iare/crm-plugin",
+    "description": "WordPress plugin for complete integration with iaRe CRM system",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "stable",
+    "autoload": {
+        "classmap": [
+            "app/core/",
+            "app/admin/",
+            "app/api/",
+            "app/helpers/",
+            "app/traits/"
+        ]
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "classmap-authoritative": true
+    },
+    "scripts": {
+        "test": "phpunit",
+        "post-install-cmd": [
+            "composer dump-autoload"
+        ],
+        "post-update-cmd": [
+            "composer dump-autoload"
+        ]
+    }
+} 

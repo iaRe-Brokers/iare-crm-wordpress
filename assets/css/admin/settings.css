@@ -1,0 +1,557 @@
+/*
+ * iaRe CRM Admin Styles
+ * Design: Flat, Clean, Modern
+ * Font: Inter
+ * Primary: #042B9E
+ * Secondary: #FFD95D
+ */
+
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* CSS Variables */
+:root {
+    --iare-primary: #042B9E;
+    --iare-secondary: #FFD95D;
+    --iare-success: #10B981;
+    --iare-error: #EF4444;
+    --iare-warning: #F59E0B;
+    --iare-gray-50: #F9FAFB;
+    --iare-gray-100: #F3F4F6;
+    --iare-gray-200: #E5E7EB;
+    --iare-gray-300: #D1D5DB;
+    --iare-gray-400: #9CA3AF;
+    --iare-gray-500: #6B7280;
+    --iare-gray-600: #4B5563;
+    --iare-gray-700: #374151;
+    --iare-gray-800: #1F2937;
+    --iare-gray-900: #111827;
+    --iare-white: #FFFFFF;
+    --iare-border-radius: 4px;
+    --iare-transition: all 0.2s ease-in-out;
+}
+
+/* Base Styles */
+.iare-crm-admin {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--iare-gray-800);
+    background: var(--iare-gray-50);
+    margin: 0 20px 0 0;
+}
+
+.iare-crm-admin * {
+    box-sizing: border-box;
+}
+
+/* Header */
+.iare-crm-header {
+    background: var(--iare-white);
+    border-bottom: 1px solid var(--iare-gray-200);
+    padding: 24px 32px;
+    margin: 0 -20px 24px 0;
+}
+
+.iare-crm-logo h1 {
+    color: var(--iare-primary);
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.iare-crm-subtitle {
+    color: var(--iare-gray-600);
+    font-size: 16px;
+    margin: 8px 0 0 0;
+    font-weight: 400;
+}
+
+/* Content Layout */
+.iare-crm-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    max-width: 1200px;
+}
+
+.iare-crm-main {
+    min-width: 0; /* Prevents overflow */
+}
+
+.iare-crm-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Cards */
+.iare-crm-card {
+    background: var(--iare-white);
+    border: 1px solid var(--iare-gray-200);
+    border-radius: var(--iare-border-radius);
+    overflow: hidden;
+}
+
+.iare-crm-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--iare-gray-200);
+    background: var(--iare-gray-50);
+}
+
+.iare-crm-card-header h2,
+.iare-crm-card-header h3 {
+    margin: 0 0 4px 0;
+    color: var(--iare-gray-900);
+    font-weight: 600;
+}
+
+.iare-crm-card-header h2 {
+    font-size: 18px;
+}
+
+.iare-crm-card-header h3 {
+    font-size: 16px;
+}
+
+.iare-crm-card-header p {
+    margin: 0;
+    color: var(--iare-gray-600);
+    font-size: 14px;
+}
+
+.iare-crm-card-body {
+    padding: 24px;
+}
+
+/* Form Elements */
+.iare-crm-field-group {
+    margin-bottom: 24px;
+}
+
+.iare-crm-label {
+    display: block;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--iare-gray-700);
+    margin-bottom: 8px;
+}
+
+.iare-crm-label .required {
+    color: var(--iare-error);
+    margin-left: 4px;
+}
+
+.iare-crm-input-group {
+    position: relative;
+    display: flex;
+    border: 1px solid var(--iare-gray-200);
+    border-radius: var(--iare-border-radius);
+    overflow: hidden;
+    transition: var(--iare-transition);
+    background: var(--iare-gray-50);
+}
+
+.iare-crm-input-group:focus-within {
+    border-color: var(--iare-primary);
+    outline: 2px solid rgba(4, 43, 158, 0.1);
+    background: var(--iare-white);
+}
+
+.iare-crm-input-group input[type="text"],
+.iare-crm-input-group input[type="password"] {
+    flex: 1;
+    padding: 16px 48px 16px 16px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--iare-gray-900);
+    height: auto;
+    min-height: 48px;
+}
+
+.iare-crm-input-group button.iare-crm-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent !important;
+    border: none !important;
+    padding: 8px !important;
+    color: var(--iare-gray-400);
+    min-height: auto;
+    z-index: 1;
+    box-shadow: none !important;
+}
+
+.iare-crm-input-group button.iare-crm-btn:hover {
+    background: transparent !important;
+    color: var(--iare-gray-600);
+    transform: translateY(-50%);
+    box-shadow: none !important;
+}
+
+.iare-crm-input-group button.iare-crm-btn .dashicons {
+    font-size: 16px;
+}
+
+.iare-crm-input-group input[type="text"]:focus,
+.iare-crm-input-group input[type="password"]:focus {
+    outline: none;
+}
+
+.iare-crm-input-group input[type="text"]::placeholder,
+.iare-crm-input-group input[type="password"]::placeholder {
+    color: var(--iare-gray-400);
+}
+
+.iare-crm-field-description {
+    margin: 8px 0 0 0;
+    font-size: 13px;
+    color: var(--iare-gray-500);
+    line-height: 1.4;
+}
+
+/* Buttons */
+.iare-crm-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--iare-border-radius);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--iare-transition);
+    position: relative;
+}
+
+.iare-crm-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Button Variants */
+.iare-crm-btn-primary {
+    background: var(--iare-primary);
+    color: var(--iare-white);
+}
+
+.iare-crm-btn-primary:hover:not(:disabled) {
+    background: #03237E;
+}
+
+.iare-crm-btn-secondary {
+    background: var(--iare-gray-100);
+    color: var(--iare-gray-700);
+    border: 1px solid var(--iare-gray-300);
+}
+
+.iare-crm-btn-secondary:hover:not(:disabled) {
+    background: var(--iare-gray-200);
+}
+
+.iare-crm-btn-outline {
+    background: var(--iare-white);
+    color: var(--iare-primary);
+    border: 1px solid var(--iare-primary);
+}
+
+.iare-crm-btn-outline:hover:not(:disabled) {
+    background: var(--iare-primary);
+    color: var(--iare-white);
+}
+
+/* Actions */
+.iare-crm-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding-top: 8px;
+}
+
+/* Status Indicator */
+.iare-crm-status-indicator {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border-radius: var(--iare-border-radius);
+    border: 1px solid var(--iare-gray-200);
+}
+
+.status-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-icon .dashicons {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+}
+
+.status-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.status-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.status-message {
+    font-size: 13px;
+    color: var(--iare-gray-600);
+    line-height: 1.4;
+}
+
+/* Status States */
+.status-connected {
+    background: rgba(16, 185, 129, 0.05);
+    border-color: var(--iare-success);
+}
+
+.status-connected .status-icon .dashicons {
+    color: var(--iare-success);
+}
+
+.status-connected .status-title {
+    color: var(--iare-success);
+}
+
+.status-failed {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: var(--iare-error);
+}
+
+.status-failed .status-icon .dashicons {
+    color: var(--iare-error);
+}
+
+.status-failed .status-title {
+    color: var(--iare-error);
+}
+
+.status-disconnected,
+.status-unknown {
+    background: rgba(245, 158, 11, 0.05);
+    border-color: var(--iare-warning);
+}
+
+.status-disconnected .status-icon .dashicons,
+.status-unknown .status-icon .dashicons {
+    color: var(--iare-warning);
+}
+
+.status-disconnected .status-title,
+.status-unknown .status-title {
+    color: var(--iare-warning);
+}
+
+/* Partner Info */
+.iare-crm-partner-info {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--iare-gray-200);
+}
+
+.iare-crm-partner-info h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--iare-gray-900);
+}
+
+.partner-details p {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    color: var(--iare-gray-600);
+}
+
+.partner-details strong {
+    color: var(--iare-gray-800);
+}
+
+/* Getting Started List */
+.getting-started-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.getting-started-list li {
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--iare-gray-700);
+    line-height: 1.5;
+}
+
+.getting-started-list li:not(:last-child) {
+    border-bottom: 1px solid var(--iare-gray-100);
+}
+
+/* Help Links */
+.iare-crm-help-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.iare-crm-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: var(--iare-border-radius);
+    color: var(--iare-primary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--iare-transition);
+}
+
+.iare-crm-link:hover {
+    background: rgba(4, 43, 158, 0.05);
+    color: var(--iare-primary);
+}
+
+.iare-crm-link .dashicons {
+    font-size: 16px;
+}
+
+/* Modal */
+.iare-crm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+}
+
+.iare-crm-modal-content {
+    background: var(--iare-white);
+    border-radius: var(--iare-border-radius);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90%;
+    overflow: hidden;
+}
+
+.iare-crm-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--iare-gray-200);
+}
+
+.iare-crm-modal-header h3 {
+    margin: 0;
+    color: var(--iare-gray-900);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.iare-crm-modal-close {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--iare-gray-400);
+    border-radius: 4px;
+    transition: var(--iare-transition);
+}
+
+.iare-crm-modal-close:hover {
+    background: var(--iare-gray-100);
+    color: var(--iare-gray-600);
+}
+
+.iare-crm-modal-body {
+    padding: 24px;
+}
+
+.iare-crm-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--iare-gray-200);
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Loading Animation */
+.loading {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--iare-gray-300);
+    border-top: 2px solid var(--iare-white);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .iare-crm-content {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .iare-crm-sidebar {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .iare-crm-header {
+        padding: 16px 20px;
+        margin: 0 -20px 16px 0;
+    }
+    
+    .iare-crm-logo h1 {
+        font-size: 24px;
+    }
+    
+    .iare-crm-card-body {
+        padding: 16px;
+    }
+    
+    .iare-crm-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .iare-crm-btn {
+        justify-content: center;
+    }
+}
+
+/* WordPress Admin Overrides */
+
+.iare-crm-admin h1 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Hide WordPress default page title */
+.iare-crm-admin .wrap > h1:first-child {
+    display: none;
+} 

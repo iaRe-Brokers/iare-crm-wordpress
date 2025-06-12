@@ -1,0 +1,267 @@
+# Spanish (Spain) translation for iaRe CRM
+# Copyright (C) 2025 iaRe CRM
+# This file is distributed under the same license as the iaRe CRM plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: iaRe CRM 1.0.0\n"
+"Report-Msgid-Bugs-To: https://crm.iare.me\n"
+"POT-Creation-Date: 2025-01-20 10:00+0000\n"
+"PO-Revision-Date: 2025-06-10 11:20+0000\n"
+"Last-Translator: \n"
+"Language-Team: Spanish (Spain)\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Domain: iare-crm\n"
+"X-Loco-Version: 2.8.0; wp-6.8.1; php-8.1.23"
+
+#. Plugin Name of the plugin/theme
+msgid "iaRe CRM"
+msgstr "iaRe CRM"
+
+#. Description of the plugin/theme
+msgid ""
+"Complete integration with iaRe CRM system for lead capture and management"
+msgstr ""
+"Integración completa con el sistema iaRe CRM para captura y gestión de leads"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://crm.iare.me"
+msgstr "https://crm.iare.me"
+
+#: app/core/activator.php:13
+msgid "iaRe CRM requires WordPress version 5.0 or higher."
+msgstr "iaRe CRM requiere WordPress versión 5.0 o superior."
+
+#: app/core/activator.php:18
+msgid "iaRe CRM requires PHP version 7.4 or higher."
+msgstr "iaRe CRM requiere PHP versión 7.4 o superior."
+
+#: app/admin/menu-manager.php:78
+msgid "Testing connection..."
+msgstr "Probando conexión..."
+
+#: app/admin/menu-manager.php:79
+msgid "Connection successful!"
+msgstr "¡Conexión exitosa!"
+
+#: app/admin/menu-manager.php:80
+msgid "Connection failed. Please check your API key."
+msgstr "Conexión fallida. Por favor, verifica tu clave de API."
+
+#: app/admin/menu-manager.php:38 app/admin/menu-manager.php:39
+msgid "Settings"
+msgstr "Configuraciones"
+
+#: templates/admin/settings-page.php:11
+msgid "iaRe CRM Settings"
+msgstr "Configuraciones de iaRe CRM"
+
+#: templates/admin/settings-page.php:14
+msgid "Configure your connection to the iaRe CRM system."
+msgstr "Configura tu conexión al sistema iaRe CRM."
+
+#: templates/admin/settings-page.php:27
+msgid "API Configuration"
+msgstr "Configuración de API"
+
+#: templates/admin/settings-page.php:35
+msgid "API Key"
+msgstr "Clave de API"
+
+#: templates/admin/settings-page.php:43
+msgid "Enter your iaRe CRM API key to connect your site."
+msgstr "Ingresa tu clave de API de iaRe CRM para conectar tu sitio."
+
+#: templates/admin/settings-page.php:46
+msgid "Toggle API key visibility"
+msgstr "Alternar visibilidad de la clave de API"
+
+#: templates/admin/settings-page.php:57
+msgid "Save Settings"
+msgstr "Guardar Configuraciones"
+
+#: templates/admin/settings-page.php:60
+msgid "Test Connection"
+msgstr "Probar Conexión"
+
+#: templates/admin/settings-page.php:71
+msgid "Connection Status"
+msgstr "Estado de la Conexión"
+
+#: templates/admin/settings-page.php:79
+msgid "Not Connected"
+msgstr "No Conectado"
+
+#: templates/admin/settings-page.php:85
+msgid "Connected"
+msgstr "Conectado"
+
+#: templates/admin/settings-page.php:89
+msgid "Connection Failed"
+msgstr "Conexión Fallida"
+
+#: templates/admin/settings-page.php:92
+msgid "No API Key"
+msgstr "Sin Clave de API"
+
+#: templates/admin/settings-page.php:108
+msgid "Enter your API key and test the connection."
+msgstr "Ingresa tu clave de API y prueba la conexión."
+
+#: templates/admin/settings-page.php:117
+msgid "Partner Information"
+msgstr "Información del Socio"
+
+#: templates/admin/settings-page.php:119
+msgid "Name:"
+msgstr "Nombre:"
+
+#: templates/admin/settings-page.php:121
+msgid "Plan:"
+msgstr "Plan:"
+
+#: templates/admin/settings-page.php:124
+msgid "Integration Limit:"
+msgstr "Límite de Integración:"
+
+#: templates/admin/settings-page.php:135
+msgid "Getting Started"
+msgstr "Primeros Pasos"
+
+#: templates/admin/settings-page.php:139
+msgid "1. Enter your API key above"
+msgstr "1. Ingresa tu clave de API arriba"
+
+#: templates/admin/settings-page.php:140
+msgid "2. Test the connection"
+msgstr "2. Prueba la conexión"
+
+#: templates/admin/settings-page.php:141
+msgid "3. Save your settings"
+msgstr "3. Guarda tus configuraciones"
+
+#: templates/admin/settings-page.php:142
+msgid "4. Configure form integrations"
+msgstr "4. Configura las integraciones de formularios"
+
+#: templates/admin/settings-page.php:152
+msgid "Close modal"
+msgstr "Cerrar modal"
+
+#: app/helpers/validator.php:105
+msgid "Name is required"
+msgstr "El nombre es obligatorio"
+
+#: app/helpers/validator.php:109
+msgid "Phone number is required"
+msgstr "El número de teléfono es obligatorio"
+
+#: app/helpers/validator.php:114
+msgid "Invalid email format"
+msgstr "Formato de email inválido"
+
+#: app/api/client.php:26 app/api/client.php:194
+msgid "API base URL is not configured"
+msgstr "La URL base de la API no está configurada"
+
+#: app/api/client.php:36
+#, php-format
+msgid "Connection error: %s"
+msgstr "Error de conexión: %s"
+
+#: app/api/client.php:47
+msgid "Connection successful"
+msgstr "Conexión exitosa"
+
+#: app/api/client.php:52
+msgid "Authentication failed"
+msgstr "Fallo en la autenticación"
+
+#: app/api/client.php:90
+msgid "Campaigns retrieved successfully"
+msgstr "Campañas recuperadas exitosamente"
+
+#: app/api/client.php:97
+msgid "Failed to retrieve campaigns"
+msgstr "Fallo al recuperar campañas"
+
+#: app/api/client.php:116
+msgid "Invalid lead data"
+msgstr "Datos de lead inválidos"
+
+#: app/api/client.php:138
+msgid "Lead created successfully"
+msgstr "Lead creado exitosamente"
+
+#: app/api/client.php:145
+msgid "Failed to create lead"
+msgstr "Fallo al crear lead"
+
+#: app/api/client.php:212
+msgid "Health check completed"
+msgstr "Verificación de salud completada"
+
+#: app/admin/pages/settings-page.php:38
+msgid "You do not have sufficient permissions to access this page."
+msgstr "No tienes permisos suficientes para acceder a esta página."
+
+#: app/admin/pages/settings-page.php:55
+msgid "Security check failed."
+msgstr "Fallo en la verificación de seguridad."
+
+#: app/admin/pages/settings-page.php:68
+msgid "API key cannot be empty."
+msgstr "La clave de API no puede estar vacía."
+
+#: app/admin/pages/settings-page.php:75
+msgid "Invalid API key format."
+msgstr "Formato de clave de API inválido."
+
+#: app/admin/pages/settings-page.php:93
+msgid "Settings saved successfully."
+msgstr "Configuraciones guardadas exitosamente."
+
+#: app/admin/pages/settings-page.php:95
+msgid "Failed to save settings."
+msgstr "Fallo al guardar configuraciones."
+
+#: app/admin/pages/settings-page.php:110
+msgid "You do not have permission to perform this action."
+msgstr "No tienes permiso para realizar esta acción."
+
+#: app/admin/pages/settings-page.php:123
+msgid "API key is required."
+msgstr "La clave de API es obligatoria."
+
+#: app/admin/pages/settings-page.php:179
+msgid "No API key configured"
+msgstr "Ninguna clave de API configurada"
+
+#: app/admin/pages/settings-page.php:190
+msgid "Connection status unknown"
+msgstr "Estado de conexión desconocido"
+
+#: app/admin/settings/api-settings.php:77
+msgid "API key is required for testing connection."
+msgstr "La clave de API es obligatoria para probar la conexión."
+
+#: app/admin/settings/api-settings.php:188
+msgid "Configure your iaRe CRM API connection settings."
+msgstr "Configura tus ajustes de conexión de API de iaRe CRM."
+
+#: app/admin/settings/api-settings.php:199
+msgid "Enter your iaRe CRM API key."
+msgstr "Ingresa tu clave de API de iaRe CRM."
+
+#: app/admin/settings/api-settings.php:208
+msgid "Security check failed"
+msgstr "Fallo en la verificación de seguridad"
+
+#: app/admin/settings/api-settings.php:213
+msgid "You do not have sufficient permissions to save settings."
+msgstr "No tienes permisos suficientes para guardar configuraciones.\""
