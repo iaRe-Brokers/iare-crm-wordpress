@@ -116,7 +116,7 @@ class MenuManager {
         add_filter('update_footer', '__return_empty_string', 11);
         
         // Add CSS as backup to hide any remaining notices
-        echo '<style>
+        $hide_notices_css = '
         .iare-crm-admin .notice,
         .iare-crm-admin .updated,
         .iare-crm-admin .error,
@@ -134,8 +134,9 @@ class MenuManager {
         body.toplevel_page_iare-crm .notice-info,
         body.toplevel_page_iare-crm .notice-alt {
             display: none !important;
-        }
-        </style>';
+        }';
+        
+        wp_add_inline_style('iare-crm-admin', $hide_notices_css);
     }
 
     /**
