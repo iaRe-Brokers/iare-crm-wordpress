@@ -1,8 +1,0 @@
-.cursor/*
-.cursorignore
-.cursorrules
-*.log
-/logs/
-*.tmp
-*.temp
-readme.txt
