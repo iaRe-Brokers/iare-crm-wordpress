@@ -112,9 +112,74 @@ class Validator {
             $errors['email'] = __('Invalid email format', 'iare-crm');
         }
 
+        // Validate capture_source length
+        if (!empty($data['capture_source']) && strlen($data['capture_source']) > 100) {
+            $errors['capture_source'] = __('Capture source must be at most 100 characters', 'iare-crm');
+        }
+
+        // Validate enterprise length (API limit: 50 characters)
+        if (!empty($data['enterprise']) && strlen($data['enterprise']) > 50) {
+            $errors['enterprise'] = __('Enterprise must be at most 50 characters', 'iare-crm');
+        }
+
+        // Validate additional_info structure and limits
+        if (!empty($data['additional_info'])) {
+            $additional_info_errors = self::validate_additional_info($data['additional_info']);
+            if (!empty($additional_info_errors)) {
+                $errors['additional_info'] = $additional_info_errors;
+            }
+        }
+
         return [
             'valid' => empty($errors),
             'errors' => $errors
         ];
+    }
+
+    /**
+     * Validate additional_info array structure
+     * 
+     * @param array $additional_info Additional info array to validate
+     * @return array Validation errors
+     */
+    public static function validate_additional_info($additional_info) {
+        $errors = [];
+
+        if (!is_array($additional_info)) {
+            return [__('Additional info must be an array', 'iare-crm')];
+        }
+
+        // Check maximum number of items (API limit: 15)
+        if (count($additional_info) > 15) {
+            $errors[] = __('Additional info can contain at most 15 items', 'iare-crm');
+        }
+
+        $titles_seen = [];
+
+        foreach ($additional_info as $index => $item) {
+            if (!is_array($item)) {
+                $errors[] = sprintf(__('Additional info item %d must be an array', 'iare-crm'), $index + 1);
+                continue;
+            }
+
+            // Validate required fields
+            if (empty($item['title'])) {
+                $errors[] = sprintf(__('Additional info item %d: title is required', 'iare-crm'), $index + 1);
+            } elseif (strlen($item['title']) > 50) {
+                $errors[] = sprintf(__('Additional info item %d: title must be at most 50 characters', 'iare-crm'), $index + 1);
+            } elseif (in_array($item['title'], $titles_seen)) {
+                $errors[] = sprintf(__('Additional info item %d: duplicate title "%s"', 'iare-crm'), $index + 1, $item['title']);
+            } else {
+                $titles_seen[] = $item['title'];
+            }
+
+            if (empty($item['value'])) {
+                $errors[] = sprintf(__('Additional info item %d: value is required', 'iare-crm'), $index + 1);
+            } elseif (strlen($item['value']) > 255) {
+                $errors[] = sprintf(__('Additional info item %d: value must be at most 255 characters', 'iare-crm'), $index + 1);
+            }
+        }
+
+        return $errors;
     }
 } 
