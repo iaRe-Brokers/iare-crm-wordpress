@@ -158,24 +158,30 @@ class Validator {
 
         foreach ($additional_info as $index => $item) {
             if (!is_array($item)) {
+                // translators: %d is the item number
                 $errors[] = sprintf(__('Additional info item %d must be an array', 'iare-crm'), $index + 1);
                 continue;
             }
 
             // Validate required fields
             if (empty($item['title'])) {
+                // translators: %d is the item number
                 $errors[] = sprintf(__('Additional info item %d: title is required', 'iare-crm'), $index + 1);
             } elseif (strlen($item['title']) > 50) {
+                // translators: %d is the item number
                 $errors[] = sprintf(__('Additional info item %d: title must be at most 50 characters', 'iare-crm'), $index + 1);
             } elseif (in_array($item['title'], $titles_seen)) {
-                $errors[] = sprintf(__('Additional info item %d: duplicate title "%s"', 'iare-crm'), $index + 1, $item['title']);
+                // translators: %1$d is the item number, %2$s is the title value
+                $errors[] = sprintf(__('Additional info item %1$d: duplicate title "%2$s"', 'iare-crm'), $index + 1, $item['title']);
             } else {
                 $titles_seen[] = $item['title'];
             }
 
             if (empty($item['value'])) {
+                // translators: %d is the item number
                 $errors[] = sprintf(__('Additional info item %d: value is required', 'iare-crm'), $index + 1);
             } elseif (strlen($item['value']) > 255) {
+                // translators: %d is the item number
                 $errors[] = sprintf(__('Additional info item %d: value must be at most 255 characters', 'iare-crm'), $index + 1);
             }
         }
