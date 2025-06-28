@@ -26,6 +26,7 @@ return [
         'API key is required.' => 'Chave da API é obrigatória.',
         'Authentication failed' => 'Falha na autenticação',
         'Campaigns retrieved successfully' => 'Campanhas recuperadas com sucesso',
+        'Check' => 'Verificar',
         'Close modal' => 'Fechar modal',
         'Complete integration with iaRe CRM system for lead capture and management' => 'Integração completa com o sistema iaRe CRM para captura e gestão de leads',
         'Configure your connection to the iaRe CRM system.' => 'Configure sua conexão com o sistema iaRe CRM.',
@@ -38,6 +39,11 @@ return [
         'Connection status unknown' => 'Status da conexão desconhecido',
         'Connection successful' => 'Conexão realizada com sucesso',
         'Connection successful!' => 'Conexão realizada com sucesso!',
+        'Capture Source' => 'Fonte de Captação',
+        'Source of lead capture (leave blank to use "WordPress" as default).' => 'Fonte de captação do lead (deixe em branco para usar "WordPress" como padrão).',
+        'Enterprise Field' => 'Campo Empreendimento',
+        'Select which form field contains the enterprise name (optional).' => 'Selecione qual campo do formulário contém o nome do empreendimento (opcional).',
+        'URL Cadastro' => 'URL Cadastro',
         'Enter your API key and test the connection.' => 'Insira sua chave da API e teste a conexão.',
         'Enter your iaRe CRM API key to connect your site.' => 'Insira sua chave da API do iaRe CRM para conectar seu site.',
         'Enter your iaRe CRM API key.' => 'Insira sua chave da API do iaRe CRM.',
@@ -74,6 +80,16 @@ return [
         'Toggle API key visibility' => 'Alternar visibilidade da chave da API',
         'You do not have permission to perform this action.' => 'Você não tem permissão para executar esta ação.',
         'You do not have sufficient permissions to access this page.' => 'Você não tem permissões suficientes para acessar esta página.',
-        'You do not have sufficient permissions to save settings.' => 'Você não tem permissões suficientes para salvar as configurações.'
+        'You do not have sufficient permissions to save settings.' => 'Você não tem permissões suficientes para salvar as configurações.',
+        'Capture source must be at most 100 characters' => 'A fonte de captação deve ter no máximo 100 caracteres',
+        'Enterprise must be at most 50 characters' => 'O empreendimento deve ter no máximo 50 caracteres',
+        'Additional info must be an array' => 'As informações adicionais devem ser um array',
+        'Additional info can contain at most 15 items' => 'As informações adicionais podem conter no máximo 15 itens',
+        'Additional info item %d must be an array' => 'O item %d das informações adicionais deve ser um array',
+        'Additional info item %d: title is required' => 'Item %d das informações adicionais: título é obrigatório',
+        'Additional info item %d: title must be at most 50 characters' => 'Item %d das informações adicionais: título deve ter no máximo 50 caracteres',
+        'Additional info item %d: duplicate title "%s"' => 'Item %d das informações adicionais: título duplicado "%s"',
+        'Additional info item %d: value is required' => 'Item %d das informações adicionais: valor é obrigatório',
+        'Additional info item %d: value must be at most 255 characters' => 'Item %d das informações adicionais: valor deve ter no máximo 255 caracteres'
     ]
 ];

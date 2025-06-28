@@ -214,56 +214,76 @@ msgid "Select the campaign to send leads to."
 msgstr "Selecione a campanha para enviar os leads."
 
 #: app/integrations/elementor/form-actions/iare-crm-action.php:58
+msgid "Capture Source"
+msgstr "Fonte de Captação"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:62
+msgid "Source of lead capture (leave blank to use \"WordPress\" as default)."
+msgstr "Fonte de captação do lead (deixe em branco para usar \"WordPress\" como padrão)."
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:66
 msgid "Field Mapping"
 msgstr "Mapeamento de Campos"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:66
+#: app/integrations/elementor/form-actions/iare-crm-action.php:74
 msgid "Name Field"
 msgstr "Campo Nome"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:70
+#: app/integrations/elementor/form-actions/iare-crm-action.php:78
 msgid "Select which form field contains the lead name."
 msgstr "Selecione qual campo do formulário contém o nome do lead."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:77
+#: app/integrations/elementor/form-actions/iare-crm-action.php:85
 msgid "Surname Field"
 msgstr "Campo Sobrenome"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:81
+#: app/integrations/elementor/form-actions/iare-crm-action.php:89
 msgid "Select which form field contains the lead surname (optional)."
 msgstr "Selecione qual campo do formulário contém o sobrenome do lead (opcional)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:88
+#: app/integrations/elementor/form-actions/iare-crm-action.php:96
 msgid "Phone Country Code Field"
 msgstr "Campo Código do País"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:92
+#: app/integrations/elementor/form-actions/iare-crm-action.php:100
 msgid "Select which form field contains the phone country code (optional)."
 msgstr "Selecione qual campo do formulário contém o código do país do telefone (opcional)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:99
+#: app/integrations/elementor/form-actions/iare-crm-action.php:107
 msgid "Default Country Code"
 msgstr "Código do País Padrão"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:103
+#: app/integrations/elementor/form-actions/iare-crm-action.php:111
 msgid "Default country code to use if no field is mapped (e.g., 55 for Brazil)."
 msgstr "Código do país padrão a ser usado se nenhum campo for mapeado (ex: 55 para Brasil)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:112
+#: app/integrations/elementor/form-actions/iare-crm-action.php:120
 msgid "Phone Number Field"
 msgstr "Campo Número de Telefone"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:116
+#: app/integrations/elementor/form-actions/iare-crm-action.php:124
 msgid "Select which form field contains the lead phone number."
 msgstr "Selecione qual campo do formulário contém o número de telefone do lead."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:123
+#: app/integrations/elementor/form-actions/iare-crm-action.php:131
 msgid "Email Field"
-msgstr "Campo Email"
+msgstr "Campo E-mail"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:127
+#: app/integrations/elementor/form-actions/iare-crm-action.php:135
 msgid "Select which form field contains the lead email (optional)."
-msgstr "Selecione qual campo do formulário contém o email do lead (opcional)."
+msgstr "Selecione qual campo do formulário contém o e-mail do lead (opcional)."
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:142
+msgid "Enterprise Field"
+msgstr "Campo Empreendimento"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:146
+msgid "Select which form field contains the enterprise name (optional)."
+msgstr "Selecione qual campo do formulário contém o nome do empreendimento (opcional)."
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:283
+msgid "URL Cadastro"
+msgstr "URL Cadastro"
 
 #: app/integrations/elementor/form-actions/iare-crm-action.php:286
 msgid "Select Campaign"
@@ -362,3 +382,43 @@ msgstr "Você não tem permissões suficientes para acessar esta página."
 #: app/admin/settings/api-settings.php:213
 msgid "You do not have sufficient permissions to save settings."
 msgstr "Você não tem permissões suficientes para salvar as configurações."
+
+#: app/helpers/validator.php:118
+msgid "Capture source must be at most 100 characters"
+msgstr "A fonte de captação deve ter no máximo 100 caracteres"
+
+#: app/helpers/validator.php:123
+msgid "Enterprise must be at most 50 characters"
+msgstr "O empreendimento deve ter no máximo 50 caracteres"
+
+#: app/helpers/validator.php:137
+msgid "Additional info must be an array"
+msgstr "As informações adicionais devem ser um array"
+
+#: app/helpers/validator.php:141
+msgid "Additional info can contain at most 15 items"
+msgstr "As informações adicionais podem conter no máximo 15 itens"
+
+#: app/helpers/validator.php:147
+msgid "Additional info item %d must be an array"
+msgstr "O item %d das informações adicionais deve ser um array"
+
+#: app/helpers/validator.php:152
+msgid "Additional info item %d: title is required"
+msgstr "Item %d das informações adicionais: título é obrigatório"
+
+#: app/helpers/validator.php:154
+msgid "Additional info item %d: title must be at most 50 characters"
+msgstr "Item %d das informações adicionais: título deve ter no máximo 50 caracteres"
+
+#: app/helpers/validator.php:156
+msgid "Additional info item %d: duplicate title \"%s\""
+msgstr "Item %d das informações adicionais: título duplicado \"%s\""
+
+#: app/helpers/validator.php:161
+msgid "Additional info item %d: value is required"
+msgstr "Item %d das informações adicionais: valor é obrigatório"
+
+#: app/helpers/validator.php:163
+msgid "Additional info item %d: value must be at most 255 characters"
+msgstr "Item %d das informações adicionais: valor deve ter no máximo 255 caracteres"
