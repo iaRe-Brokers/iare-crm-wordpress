@@ -18,20 +18,30 @@ class UtmCaptureService {
         'utm_source',
         'utm_medium', 
         'utm_campaign',
-        'utm_content',
-        'utm_term'
+        'utm_content'
     ];
 
-    const UTM_SESSION_KEY = 'iare_crm_utm_data';
+    const UTM_COOKIE_PREFIX = 'iare_crm_';
 
     /**
      * Initialize the service
      */
     protected function __construct() {
-        add_action('plugins_loaded', [$this, 'capture_utm_parameters'], 5);
-        add_action('wp_loaded', [$this, 'capture_utm_parameters'], 5);
-        add_action('template_redirect', [$this, 'capture_utm_parameters'], 5);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_utm_capture_script']);
         add_filter('iare_crm_elementor_form_data', [$this, 'add_utm_to_form_data'], 10, 2);
+    }
+
+    /**
+     * Enqueue UTM capture JavaScript
+     */
+    public function enqueue_utm_capture_script() {
+        wp_enqueue_script(
+            'iare-crm-utm-capture',
+            IARE_CRM_PLUGIN_URL . 'assets/js/frontend/utm-capture.js',
+            [],
+            IARE_CRM_VERSION,
+            true
+        );
     }
 
     /**
@@ -71,61 +81,25 @@ class UtmCaptureService {
     }
 
     /**
-     * Safely get UTM data from session
+     * Safely get UTM data from cookies
      * 
      * @return array Sanitized UTM data
      */
-    private function get_safe_session_utm_data() {
-        if (!session_id()) {
-            session_start();
-        }
-
-        // Check if session data exists
-        $session_data = filter_var_array($_SESSION, FILTER_SANITIZE_STRING);
-        
-        if (!isset($session_data[self::UTM_SESSION_KEY])) {
-            return [];
-        }
-
-        $utm_data = $session_data[self::UTM_SESSION_KEY];
-        
-        if (!is_array($utm_data)) {
-            return [];
-        }
-
-        // Additional sanitization for safety
-        $sanitized_data = [];
-        foreach ($utm_data as $key => $value) {
-            $sanitized_data[sanitize_key($key)] = sanitize_text_field($value);
-        }
-        
-        return $sanitized_data;
-    }
-
-    /**
-     * Capture UTM parameters from URL and store in session
-     */
-    public function capture_utm_parameters() {
-        if (!session_id()) {
-            session_start();
-        }
-
+    private function get_safe_cookie_utm_data() {
         $utm_data = [];
-        $has_utm = false;
-
-        // Capture UTM parameters from current request
+        
         foreach (self::UTM_PARAMETERS as $param) {
-            $param_value = $this->get_safe_get_parameter($param);
-            if (!empty($param_value)) {
-                $utm_data[$param] = $param_value;
-                $has_utm = true;
+            $cookie_name = self::UTM_COOKIE_PREFIX . $param;
+            
+            if (isset($_COOKIE[$cookie_name]) && !empty($_COOKIE[$cookie_name])) {
+                $utm_data[$param] = sanitize_text_field(wp_unslash($_COOKIE[$cookie_name]));
             }
         }
-
-        if ($has_utm) {
-            $_SESSION[self::UTM_SESSION_KEY] = $utm_data;
-        }
+        
+        return $utm_data;
     }
+
+
 
     /**
      * Get stored UTM parameters
@@ -133,14 +107,14 @@ class UtmCaptureService {
      * @return array UTM parameters
      */
     public function get_utm_parameters() {
-        return $this->get_safe_session_utm_data();
+        return $this->get_safe_cookie_utm_data();
     }
 
     /**
      * Add UTM data to Elementor form data
      */
     public function add_utm_to_form_data($form_data, $raw_fields) {
-        $utm_data = $this->get_safe_session_utm_data();
+        $utm_data = $this->get_safe_cookie_utm_data();
 
         if (!empty($utm_data)) {
             foreach ($utm_data as $utm_key => $utm_value) {
@@ -152,15 +126,22 @@ class UtmCaptureService {
     }
 
     /**
-     * Clear UTM data from session
+     * Clear UTM data from cookies
      */
     public function clear_utm_data() {
-        if (!session_id()) {
-            session_start();
+        foreach (self::UTM_PARAMETERS as $param) {
+            $cookie_name = self::UTM_COOKIE_PREFIX . $param;
+            if (isset($_COOKIE[$cookie_name])) {
+                setcookie($cookie_name, '', time() - 3600, '/');
+                unset($_COOKIE[$cookie_name]);
+            }
         }
-
-        if (isset($_SESSION[self::UTM_SESSION_KEY])) {
-            unset($_SESSION[self::UTM_SESSION_KEY]);
+        
+        // Clear timestamp cookie
+        $timestamp_cookie = self::UTM_COOKIE_PREFIX . 'timestamp';
+        if (isset($_COOKIE[$timestamp_cookie])) {
+            setcookie($timestamp_cookie, '', time() - 3600, '/');
+            unset($_COOKIE[$timestamp_cookie]);
         }
     }
 
@@ -191,25 +172,27 @@ class UtmCaptureService {
      * @return array Debug information
      */
     public function debug_utm_status() {
-        if (!session_id()) {
-            session_start();
-        }
-
         $request_uri = '';
         if (isset($_SERVER['REQUEST_URI'])) {
             $request_uri = sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI']));
         }
 
-        // Safely get session data
-        $safe_session_data = filter_var_array($_SESSION, FILTER_SANITIZE_STRING);
+        // Safely get cookie data
+        $utm_cookies = [];
+        foreach (self::UTM_PARAMETERS as $param) {
+            $cookie_name = self::UTM_COOKIE_PREFIX . $param;
+            if (isset($_COOKIE[$cookie_name])) {
+                $utm_cookies[$cookie_name] = sanitize_text_field(wp_unslash($_COOKIE[$cookie_name]));
+            }
+        }
 
         $debug_info = [
-            'session_id' => session_id(),
-            'session_data' => $safe_session_data,
+            'utm_cookies' => $utm_cookies,
             'utm_data' => $this->get_utm_parameters(),
             'get_params' => $this->get_safe_get_parameters(),
             'request_uri' => $request_uri,
-            'has_utm' => $this->has_utm_data()
+            'has_utm' => $this->has_utm_data(),
+            'javascript_enabled' => 'Check console for: IareCrmUtmCapture.debug()'
         ];
 
         return $debug_info;
