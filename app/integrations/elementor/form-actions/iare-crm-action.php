@@ -302,7 +302,15 @@ class IareCrmAction extends Action_Base {
         $count = 0;
 
         // Always add the page URL as the first additional info
-        $current_url = esc_url_raw($_SERVER['HTTP_REFERER'] ?? $_SERVER['REQUEST_URI'] ?? get_permalink());
+        $current_url = '';
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $current_url = esc_url_raw(wp_unslash($_SERVER['HTTP_REFERER']));
+        } elseif (!empty($_SERVER['REQUEST_URI'])) {
+            $current_url = esc_url_raw(wp_unslash($_SERVER['REQUEST_URI']));
+        } else {
+            $current_url = get_permalink();
+        }
+        
         if (!empty($current_url) && $count < self::MAX_ADDITIONAL_INFO) {
             $clean_url = strtok($current_url, '?');
             
