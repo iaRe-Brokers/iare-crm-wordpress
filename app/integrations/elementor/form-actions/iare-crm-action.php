@@ -16,6 +16,8 @@ defined('ABSPATH') || exit;
  */
 class IareCrmAction extends Action_Base {
 
+    const MAX_ADDITIONAL_INFO = 15;
+
     /**
      * Get action name
      * 
@@ -62,6 +64,18 @@ class IareCrmAction extends Action_Base {
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => $this->get_campaigns_options(),
                 'description' => esc_html__('Select the campaign to send leads to.', 'iare-crm'),
+            ]
+        );
+
+        // Capture source field
+        $widget->add_control(
+            'iare_crm_capture_source',
+            [
+                'label' => esc_html__('Capture Source', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => 'WordPress',
+                'placeholder' => 'WordPress',
+                'description' => esc_html__('Source of lead capture (leave blank to use "WordPress" as default).', 'iare-crm'),
             ]
         );
 
@@ -145,6 +159,17 @@ class IareCrmAction extends Action_Base {
             ]
         );
 
+        // Enterprise field mapping (optional)
+        $widget->add_control(
+            'iare_crm_enterprise_field',
+            [
+                'label' => esc_html__('Enterprise Field', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => $this->get_form_fields_options_safe($widget, true),
+                'description' => esc_html__('Select which form field contains the enterprise name (optional).', 'iare-crm'),
+            ]
+        );
+
         $widget->end_controls_section();
     }
 
@@ -176,7 +201,7 @@ class IareCrmAction extends Action_Base {
         }
 
         // Build lead data from mapped fields
-        $lead_data = $this->build_lead_data($settings, $fields);
+        $lead_data = $this->build_lead_data($settings, $fields, $raw_fields);
 
         // Apply filter to allow UTM data injection
         $lead_data = apply_filters('iare_crm_elementor_form_data', $lead_data, $raw_fields);
@@ -195,9 +220,10 @@ class IareCrmAction extends Action_Base {
      * 
      * @param array $settings Form settings
      * @param array $fields Submitted form fields
+     * @param array $raw_fields Raw form fields with labels
      * @return array Lead data
      */
-    private function build_lead_data($settings, $fields) {
+    private function build_lead_data($settings, $fields, $raw_fields = []) {
         $lead_data = [];
 
         // Name (required)
@@ -227,6 +253,22 @@ class IareCrmAction extends Action_Base {
             $lead_data['email'] = sanitize_email($fields[$settings['iare_crm_email_field']]);
         }
 
+        // Capture source
+        $capture_source = !empty($settings['iare_crm_capture_source']) ? 
+            sanitize_text_field($settings['iare_crm_capture_source']) : 'WordPress';
+        $lead_data['capture_source'] = $capture_source;
+
+        // Enterprise (optional)
+        if (!empty($settings['iare_crm_enterprise_field']) && !empty($fields[$settings['iare_crm_enterprise_field']])) {
+            $lead_data['enterprise'] = sanitize_text_field($fields[$settings['iare_crm_enterprise_field']]);
+        }
+
+        // Additional info from unmapped fields
+        $additional_info = $this->build_additional_info($settings, $fields, $raw_fields);
+        if (!empty($additional_info)) {
+            $lead_data['additional_info'] = $additional_info;
+        }
+
         /**
          * Filtro para dados do lead antes do envio
          * 
@@ -236,6 +278,82 @@ class IareCrmAction extends Action_Base {
          * @since 1.0.0
          */
         return apply_filters('iare_crm_lead_data', $lead_data, $settings, $fields);
+    }
+
+    /**
+     * Build additional info from unmapped form fields
+     * 
+     * @param array $settings Form settings
+     * @param array $fields Submitted form fields
+     * @param array $raw_fields Raw form fields with labels
+     * @return array Additional info array
+     */
+    private function build_additional_info($settings, $fields, $raw_fields = []) {
+        $mapped_fields = array_filter([
+            $settings['iare_crm_name_field'] ?? '',
+            $settings['iare_crm_surname_field'] ?? '',
+            $settings['iare_crm_phone_country_code_field'] ?? '',
+            $settings['iare_crm_phone_number_field'] ?? '',
+            $settings['iare_crm_email_field'] ?? '',
+            $settings['iare_crm_enterprise_field'] ?? ''
+        ]);
+
+        $additional_info = [];
+        $count = 0;
+
+        // Always add the page URL as the first additional info
+        $current_url = esc_url_raw($_SERVER['HTTP_REFERER'] ?? $_SERVER['REQUEST_URI'] ?? get_permalink());
+        if (!empty($current_url) && $count < self::MAX_ADDITIONAL_INFO) {
+            $clean_url = strtok($current_url, '?');
+            
+            $additional_info[] = [
+                'title' => __('URL Cadastro', 'iare-crm'),
+                'value' => $clean_url
+            ];
+            $count++;
+        }
+
+        foreach ($fields as $field_id => $field_value) {
+            // Skip if field is already mapped or if we've reached the limit
+            if (in_array($field_id, $mapped_fields) || $count >= self::MAX_ADDITIONAL_INFO) {
+                continue;
+            }
+
+            $value = sanitize_text_field($field_value);
+
+            if (empty($value)) {
+                continue;
+            }
+
+            $title = $field_id;
+            
+            if (!empty($raw_fields[$field_id]) && isset($raw_fields[$field_id]['title'])) {
+                $title = $raw_fields[$field_id]['title'];
+            } elseif (!empty($raw_fields[$field_id]) && isset($raw_fields[$field_id]['field_label'])) {
+                $title = $raw_fields[$field_id]['field_label'];
+            }
+
+            $title = sanitize_text_field($title);
+
+            // Ensure title is not longer than 50 characters (API limit)
+            if (strlen($title) > 50) {
+                $title = substr($title, 0, 47) . '...';
+            }
+
+            // Ensure value is not longer than 255 characters (API limit)
+            if (strlen($value) > 255) {
+                $value = substr($value, 0, 252) . '...';
+            }
+
+            $additional_info[] = [
+                'title' => $title,
+                'value' => $value
+            ];
+
+            $count++;
+        }
+
+        return $additional_info;
     }
 
     /**
@@ -386,12 +504,14 @@ class IareCrmAction extends Action_Base {
     public function on_export($element) {
         unset(
             $element['iare_crm_campaign'],
+            $element['iare_crm_capture_source'],
             $element['iare_crm_name_field'],
             $element['iare_crm_surname_field'],
             $element['iare_crm_phone_country_code_field'],
             $element['iare_crm_default_country_code'],
             $element['iare_crm_phone_number_field'],
-            $element['iare_crm_email_field']
+            $element['iare_crm_email_field'],
+            $element['iare_crm_enterprise_field']
         );
 
         return $element;
