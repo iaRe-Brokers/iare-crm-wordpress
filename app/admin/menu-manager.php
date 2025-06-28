@@ -43,11 +43,19 @@ class MenuManager {
     }
 
     private function get_menu_icon() {
-        return 'data:image/svg+xml;base64,' . base64_encode('
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#042B9E">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        $svg_content = '
+            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" preserveAspectRatio="xMidYMid meet">
+                <g transform="translate(0,60) scale(0.1,-0.1)" fill="#9EA3B1" stroke="none">
+                    <path d="M220 587 c-191 -54 -278 -286 -169 -451 130 -196 424 -172 523 43 29
+64 29 178 -1 242 -27 59 -92 125 -148 150 -56 25 -148 32 -205 16z m182 -199
+c36 -33 69 -66 72 -75 12 -30 5 -63 -16 -83 -29 -27 -57 -25 -98 5 -43 32 -71
+32 -110 -2 -40 -33 -86 -35 -112 -4 -32 41 -23 67 50 143 102 106 111 107 214
+16z"/>
+                </g>
             </svg>
-        ');
+        ';
+        
+        return 'data:image/svg+xml;base64,' . base64_encode($svg_content);
     }
 
     public function enqueue_admin_assets($hook) {
