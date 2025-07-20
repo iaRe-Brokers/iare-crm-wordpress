@@ -188,4 +188,83 @@ class Validator {
 
         return $errors;
     }
-} 
+
+    /**
+     * Validate campaigns array
+     * 
+     * @param mixed $campaigns Campaigns to validate (string or array)
+     * @return array Validation result with valid campaigns and errors
+     */
+    public static function validate_campaigns($campaigns) {
+        $errors = [];
+        $valid_campaigns = [];
+
+        // Converter string para array se necessário
+        if (is_string($campaigns) && !empty($campaigns)) {
+            $campaigns = [$campaigns];
+        }
+
+        // Verificar se é um array
+        if (!is_array($campaigns)) {
+            return [
+                'valid' => false,
+                'campaigns' => [],
+                'errors' => [__('Campaigns must be an array or string', 'iare-crm')]
+            ];
+        }
+
+        // Verificar se não está vazio
+        if (empty($campaigns)) {
+            return [
+                'valid' => false,
+                'campaigns' => [],
+                'errors' => [__('At least one campaign must be selected', 'iare-crm')]
+            ];
+        }
+
+        // Verificar limite máximo de campanhas (10)
+        if (count($campaigns) > 10) {
+            $errors[] = __('Maximum of 10 campaigns allowed', 'iare-crm');
+        }
+
+        // Validar cada ID de campanha
+        $seen_ids = [];
+        foreach ($campaigns as $index => $campaign_id) {
+            // Converter para string se necessário
+            $campaign_id = (string) $campaign_id;
+            
+            // Verificar se não está vazio
+            if (empty($campaign_id)) {
+                $errors[] = sprintf(__('Campaign at position %d is empty', 'iare-crm'), $index + 1);
+                continue;
+            }
+
+            // Validar se é um ID válido (numérico ou string alfanumérica)
+            if (!preg_match('/^[a-zA-Z0-9_-]+$/', $campaign_id)) {
+                $errors[] = sprintf(__('Campaign ID "%s" contains invalid characters', 'iare-crm'), $campaign_id);
+                continue;
+            }
+
+            // Verificar duplicatas
+            if (in_array($campaign_id, $seen_ids)) {
+                $errors[] = sprintf(__('Duplicate campaign ID "%s"', 'iare-crm'), $campaign_id);
+                continue;
+            }
+
+            $seen_ids[] = $campaign_id;
+            $valid_campaigns[] = $campaign_id;
+        }
+
+        // Limitar a 10 campanhas válidas
+        if (count($valid_campaigns) > 10) {
+            $valid_campaigns = array_slice($valid_campaigns, 0, 10);
+            $errors[] = __('Only the first 10 campaigns will be used', 'iare-crm');
+        }
+
+        return [
+            'valid' => empty($errors),
+            'campaigns' => $valid_campaigns,
+            'errors' => $errors
+        ];
+    }
+}
