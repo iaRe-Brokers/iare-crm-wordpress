@@ -60,10 +60,12 @@ class IareCrmAction extends Action_Base {
         $widget->add_control(
             'iare_crm_campaign',
             [
-                'label' => esc_html__('Campaign', 'iare-crm'),
-                'type' => \Elementor\Controls_Manager::SELECT,
+                'label' => esc_html__('Campaigns', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::SELECT2,
                 'options' => $this->get_campaigns_options(),
-                'description' => esc_html__('Select the campaign to send leads to.', 'iare-crm'),
+                'multiple' => true,
+                'description' => esc_html__('Select one or more campaigns to distribute leads to.', 'iare-crm'),
+                'label_block' => true,
             ]
         );
 
@@ -182,14 +184,40 @@ class IareCrmAction extends Action_Base {
     public function run($record, $ajax_handler) {
         $settings = $record->get('form_settings');
 
-        if (empty($settings['iare_crm_campaign'])) {
+        // Validar campanhas usando o Validator
+        $campaigns_input = $settings['iare_crm_campaign'] ?? [];
+        $validation_result = Validator::validate_campaigns($campaigns_input);
+        
+        if (!$validation_result['valid']) {
+            // Log dos erros de validação se debug estiver habilitado
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('iaRe CRM: Campaign validation errors: ' . implode(', ', $validation_result['errors']));
+            }
             return;
         }
+        
+        $campaigns = $validation_result['campaigns'];
 
         // Validate field mapping
         require_once IARE_CRM_PLUGIN_PATH . 'app/integrations/elementor/services/field-mapper-service.php';
         $validation = FieldMapperService::validate_field_mapping($settings);
         if (!$validation['valid']) {
+            return;
+        }
+
+        // Obter identificador único do formulário
+        $post_id = get_the_ID();
+        $widget_id = $record->get('form_settings')['id'] ?? 'unknown';
+        $form_identifier = $this->generate_elementor_identifier($post_id, $widget_id);
+        
+        // Selecionar próxima campanha na rotação
+        $selected_campaign = $this->get_next_campaign($campaigns, $form_identifier);
+        
+        if (!$selected_campaign) {
+            // Log do erro se debug estiver habilitado
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('iaRe CRM: Failed to select campaign for form ' . $form_identifier);
+            }
             return;
         }
 
@@ -212,7 +240,12 @@ class IareCrmAction extends Action_Base {
         }
 
         $api_client = new Client();
-        $result = $api_client->create_lead($api_key, $settings['iare_crm_campaign'], $lead_data);
+        $result = $api_client->create_lead($api_key, $selected_campaign, $lead_data);
+        
+        // Log da campanha selecionada para depuração
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('iaRe CRM: Lead sent to campaign ' . $selected_campaign . ' for form ' . $form_identifier);
+        }
     }
 
     /**
@@ -504,6 +537,92 @@ class IareCrmAction extends Action_Base {
     }
 
     /**
+     * Gerar identificador único para formulário Elementor
+     * 
+     * @param int $post_id ID do post
+     * @param string $widget_id ID do widget
+     * @return string Identificador único
+     */
+    private function generate_elementor_identifier($post_id, $widget_id) {
+        return 'elementor_' . $post_id . '_' . $widget_id;
+    }
+
+    /**
+     * Obter próxima campanha na rotação
+     * 
+     * @param array $campaign_ids Array de IDs das campanhas
+     * @param string $form_identifier Identificador único do formulário
+     * @return string|null ID da próxima campanha ou null se erro
+     */
+    private function get_next_campaign($campaign_ids, $form_identifier) {
+        // Se apenas uma campanha, retornar diretamente
+        if (count($campaign_ids) === 1) {
+            return $campaign_ids[0];
+        }
+
+        // Obter dados de rotação
+        $rotation_data = $this->get_rotation_data($form_identifier);
+        
+        // Verificar se as campanhas mudaram
+        if ($rotation_data['campaigns'] !== $campaign_ids) {
+            // Resetar rotação com novas campanhas
+            $rotation_data = [
+                'campaigns' => $campaign_ids,
+                'last_used_index' => -1,
+                'last_used_id' => '',
+                'created_at' => current_time('mysql'),
+                'updated_at' => current_time('mysql'),
+                'total_leads' => 0
+            ];
+        }
+        
+        // Calcular próximo índice
+        $next_index = ($rotation_data['last_used_index'] + 1) % count($campaign_ids);
+        $selected_campaign = $campaign_ids[$next_index];
+        
+        // Atualizar dados de rotação
+        $rotation_data['last_used_index'] = $next_index;
+        $rotation_data['last_used_id'] = $selected_campaign;
+        $rotation_data['updated_at'] = current_time('mysql');
+        $rotation_data['total_leads']++;
+        
+        $this->update_rotation_data($form_identifier, $rotation_data);
+        
+        return $selected_campaign;
+    }
+
+    /**
+     * Obter dados de rotação para um formulário
+     * 
+     * @param string $form_identifier Identificador único do formulário
+     * @return array Dados de rotação
+     */
+    private function get_rotation_data($form_identifier) {
+        $option_key = 'iare_crm_rotation_' . $form_identifier;
+        $default_data = [
+            'campaigns' => [],
+            'last_used_index' => -1,
+            'last_used_id' => '',
+            'created_at' => current_time('mysql'),
+            'updated_at' => current_time('mysql'),
+            'total_leads' => 0
+        ];
+        
+        return get_option($option_key, $default_data);
+    }
+
+    /**
+     * Atualizar dados de rotação
+     * 
+     * @param string $form_identifier Identificador único do formulário
+     * @param array $rotation_data Dados de rotação
+     */
+    private function update_rotation_data($form_identifier, $rotation_data) {
+        $option_key = 'iare_crm_rotation_' . $form_identifier;
+        update_option($option_key, $rotation_data);
+    }
+
+    /**
      * On export - clear sensitive data
      * 
      * @param array $element
@@ -524,4 +643,4 @@ class IareCrmAction extends Action_Base {
 
         return $element;
     }
-} 
+}
