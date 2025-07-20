@@ -9,7 +9,7 @@ class Activator {
     public static function activate() {
         if (version_compare(get_bloginfo('version'), '5.0', '<')) {
             deactivate_plugins(plugin_basename(__FILE__));
-            wp_die(esc_html(__('iaRe CRM requires WordPress version 5.0 or higher.', 'iare-crm')));
+            wp_die(esc_html(__('iaRe CRM requires WordPress version 6.0 or higher.', 'iare-crm')));
         }
 
         if (version_compare(PHP_VERSION, '7.4', '<')) {
