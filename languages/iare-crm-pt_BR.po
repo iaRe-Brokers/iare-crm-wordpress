@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: iaRe CRM 1.0.0\n"
 "Report-Msgid-Bugs-To: https://crm.iare.me\n"
 "POT-Creation-Date: 2025-01-20 10:00+0000\n"
-"PO-Revision-Date: 2025-07-20 15:03+0000\n"
+"PO-Revision-Date: 2025-09-01 17:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: Português do Brasil\n"
 "Language: pt_BR\n"
@@ -33,11 +33,11 @@ msgstr ""
 msgid "\"%1$s\" requires \"%2$s\" version %3$s or greater."
 msgstr "\"%1$s\" requer \"%2$s\" versão %3$s ou superior."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:463
-#: app/integrations/elementor/form-actions/iare-crm-action.php:504
-#: app/integrations/elementor/form-actions/iare-crm-action.php:522
+#: app/integrations/elementor/form-actions/iare-crm-action.php:565
+#: app/integrations/elementor/form-actions/iare-crm-action.php:606
+#: app/integrations/elementor/form-actions/iare-crm-action.php:624
 msgid "-- Not mapped --"
-msgstr ""
+msgstr "-- Não mapeado --"
 
 #: templates/admin/settings-page.php:140
 msgid "1. Enter your API key above"
@@ -157,6 +157,14 @@ msgstr "Fonte de Captação"
 msgid "Capture source must be at most 100 characters"
 msgstr "Fonte de Captação deve ter no máximo 100 caracteres"
 
+#: app/integrations/elementor/services/field-mapper-service.php:125
+msgid "City"
+msgstr "Cidade"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:212
+msgid "City Field"
+msgstr "Campo de Cidade"
+
 #: templates/admin/settings-page.php:153
 msgid "Close modal"
 msgstr "Fechar"
@@ -208,6 +216,14 @@ msgstr "Conexão bem-sucedida"
 msgid "Connection successful!"
 msgstr "Conexão bem-sucedida!"
 
+#: app/integrations/elementor/services/field-mapper-service.php:127
+msgid "Country"
+msgstr "País"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:234
+msgid "Country Field"
+msgstr "Campo de País"
+
 #: app/integrations/elementor/form-actions/iare-crm-action.php:131
 msgid "Default Country Code"
 msgstr "Código de país padrão"
@@ -232,7 +248,7 @@ msgstr "Elementor"
 msgid "Elementor Pro"
 msgstr "Elementor Pro"
 
-#: app/integrations/elementor/services/field-mapper-service.php:91
+#: app/integrations/elementor/services/field-mapper-service.php:121
 msgid "Email"
 msgstr "E-mail"
 
@@ -277,11 +293,19 @@ msgid "Field Mapping"
 msgstr "Mapeamento de campo"
 
 #. %s: Field name that requires mapping
-#: app/integrations/elementor/services/field-mapper-service.php:63
-#: app/integrations/elementor/services/field-mapper-service.php:68
+#: app/integrations/elementor/services/field-mapper-service.php:93
+#: app/integrations/elementor/services/field-mapper-service.php:98
 #, php-format
 msgid "Field mapping required: %s"
 msgstr "Mapeamento de campo necessário: %s"
+
+#: app/integrations/elementor/services/field-mapper-service.php:124
+msgid "Gender"
+msgstr "Gênero"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:201
+msgid "Gender Field"
+msgstr "Campo de Gênero"
 
 #: templates/admin/settings-page.php:136
 msgid "Getting Started"
@@ -313,7 +337,9 @@ msgid "iaRe CRM requires PHP version 7.4 or higher."
 msgstr "O iaRe CRM requer PHP versão 7.4 ou superior."
 
 #: app/core/activator.php:12
-msgid "iaRe CRM requires WordPress version 5.0 or higher."
+#, fuzzy
+#| msgid "iaRe CRM requires WordPress version 5.0 or higher."
+msgid "iaRe CRM requires WordPress version 6.0 or higher."
 msgstr "O iaRe CRM requer o WordPress versão 6.0 ou superior."
 
 #: templates/admin/settings-page.php:12
@@ -344,7 +370,7 @@ msgstr "Lead criado com sucesso"
 msgid "Maximum of 10 campaigns allowed"
 msgstr "Máximo de 10 campanhas"
 
-#: app/integrations/elementor/services/field-mapper-service.php:87
+#: app/integrations/elementor/services/field-mapper-service.php:117
 msgid "Name"
 msgstr "Nome"
 
@@ -368,7 +394,7 @@ msgstr "Nenhuma API Key"
 msgid "No API key configured"
 msgstr "Nenhuma API Key configurada"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:415
+#: app/integrations/elementor/form-actions/iare-crm-action.php:517
 msgid "No campaigns available (check API key)"
 msgstr "Nenhuma campanha disponível (verifique a API Key)"
 
@@ -384,7 +410,7 @@ msgstr "Somente as 10 primeiras campanhas serão utilizadas"
 msgid "Partner Information"
 msgstr "Informações do parceiro"
 
-#: app/integrations/elementor/services/field-mapper-service.php:89
+#: app/integrations/elementor/services/field-mapper-service.php:119
 msgid "Phone Country Code"
 msgstr "Código do país (DDI)"
 
@@ -392,7 +418,7 @@ msgstr "Código do país (DDI)"
 msgid "Phone Country Code Field"
 msgstr "Campo de DDI"
 
-#: app/integrations/elementor/services/field-mapper-service.php:90
+#: app/integrations/elementor/services/field-mapper-service.php:120
 msgid "Phone Number"
 msgstr "Número de telefone"
 
@@ -408,6 +434,22 @@ msgstr "Número de telefone é necessário"
 msgid "Plan:"
 msgstr "Plano:"
 
+#: app/integrations/elementor/services/field-mapper-service.php:122
+msgid "Position"
+msgstr "Cargo"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:179
+msgid "Position Field"
+msgstr "Campo de Cargo"
+
+#: app/integrations/elementor/services/field-mapper-service.php:123
+msgid "Profession"
+msgstr "Profissão"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:190
+msgid "Profession Field"
+msgstr "Campo de Profissão"
+
 #: templates/admin/settings-page.php:58
 msgid "Save Settings"
 msgstr "Salvar Configurações"
@@ -416,7 +458,7 @@ msgstr "Salvar Configurações"
 msgid "Security check failed."
 msgstr "A verificação de segurança falhou."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:406
+#: app/integrations/elementor/form-actions/iare-crm-action.php:508
 msgid "Select Campaign"
 msgstr "Selecione a Campanha"
 
@@ -424,11 +466,23 @@ msgstr "Selecione a Campanha"
 msgid "Select one or more campaigns to distribute leads to."
 msgstr "Selecione uma ou mais campanhas para distribuir leads."
 
+#: app/integrations/elementor/form-actions/iare-crm-action.php:215
+msgid "Select which form field contains the city (optional)."
+msgstr "Selecione qual campo do formulário contém a cidade (opcional)."
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:237
+msgid "Select which form field contains the country (optional)."
+msgstr "Selecione qual campo do formulário contém o país (opcional)."
+
 #: app/integrations/elementor/form-actions/iare-crm-action.php:171
 msgid "Select which form field contains the enterprise name (optional)."
 msgstr ""
 "Selecione qual campo do formulário contém o nome do empreendimento (opcional)"
 "."
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:204
+msgid "Select which form field contains the gender (optional)."
+msgstr "Selecione qual campo do formulário contém o gênero (opcional)."
 
 #: app/integrations/elementor/form-actions/iare-crm-action.php:160
 msgid "Select which form field contains the lead email (optional)."
@@ -452,6 +506,18 @@ msgid "Select which form field contains the phone country code (optional)."
 msgstr ""
 "Selecione qual campo do formulário contém o código do país (DDI) (opcional)."
 
+#: app/integrations/elementor/form-actions/iare-crm-action.php:182
+msgid "Select which form field contains the position (optional)."
+msgstr "Selecione qual campo do formulário contém o cargo (opcional)."
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:193
+msgid "Select which form field contains the profession (optional)."
+msgstr "Selecione qual campo do formulário contém a profissão (opcional)."
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:226
+msgid "Select which form field contains the state (optional)."
+msgstr "Selecione qual campo do formulário contém o estado (opcional)."
+
 #: app/admin/menu-manager.php:37 app/admin/menu-manager.php:38
 msgid "Settings"
 msgstr "Configurações"
@@ -465,7 +531,15 @@ msgid "Source of lead capture (leave blank to use \"WordPress\" as default)."
 msgstr ""
 "Fonte de Captação (deixe em branco para usar \"WordPress\" como padrão)."
 
-#: app/integrations/elementor/services/field-mapper-service.php:88
+#: app/integrations/elementor/services/field-mapper-service.php:126
+msgid "State"
+msgstr "Estado (UF)"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:223
+msgid "State Field"
+msgstr "Campo de Estado (UF)"
+
+#: app/integrations/elementor/services/field-mapper-service.php:118
 msgid "Surname"
 msgstr "Sobrenome"
 
@@ -485,7 +559,7 @@ msgstr "Testando conexão..."
 msgid "Toggle API key visibility"
 msgstr "Ver API Key"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:351
+#: app/integrations/elementor/form-actions/iare-crm-action.php:453
 msgid "URL Cadastro"
 msgstr "URL Cadastro"
 
