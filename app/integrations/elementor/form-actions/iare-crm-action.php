@@ -172,6 +172,72 @@ class IareCrmAction extends Action_Base {
             ]
         );
 
+        // Position field mapping (optional)
+        $widget->add_control(
+            'iare_crm_position_field',
+            [
+                'label' => esc_html__('Position Field', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => $this->get_form_fields_options_safe($widget, true),
+                'description' => esc_html__('Select which form field contains the position (optional).', 'iare-crm'),
+            ]
+        );
+
+        // Profession field mapping (optional)
+        $widget->add_control(
+            'iare_crm_profession_field',
+            [
+                'label' => esc_html__('Profession Field', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => $this->get_form_fields_options_safe($widget, true),
+                'description' => esc_html__('Select which form field contains the profession (optional).', 'iare-crm'),
+            ]
+        );
+
+        // Gender field mapping (optional)
+        $widget->add_control(
+            'iare_crm_gender_field',
+            [
+                'label' => esc_html__('Gender Field', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => $this->get_form_fields_options_safe($widget, true),
+                'description' => esc_html__('Select which form field contains the gender (optional).', 'iare-crm'),
+            ]
+        );
+
+        // City field mapping (optional)
+        $widget->add_control(
+            'iare_crm_city_field',
+            [
+                'label' => esc_html__('City Field', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => $this->get_form_fields_options_safe($widget, true),
+                'description' => esc_html__('Select which form field contains the city (optional).', 'iare-crm'),
+            ]
+        );
+
+        // State field mapping (optional)
+        $widget->add_control(
+            'iare_crm_state_field',
+            [
+                'label' => esc_html__('State Field', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => $this->get_form_fields_options_safe($widget, true),
+                'description' => esc_html__('Select which form field contains the state (optional).', 'iare-crm'),
+            ]
+        );
+
+        // Country field mapping (optional)
+        $widget->add_control(
+            'iare_crm_country_field',
+            [
+                'label' => esc_html__('Country Field', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => $this->get_form_fields_options_safe($widget, true),
+                'description' => esc_html__('Select which form field contains the country (optional).', 'iare-crm'),
+            ]
+        );
+
         $widget->end_controls_section();
     }
 
@@ -296,6 +362,36 @@ class IareCrmAction extends Action_Base {
             $lead_data['enterprise'] = sanitize_text_field($fields[$settings['iare_crm_enterprise_field']]);
         }
 
+        // Position (optional)
+        if (!empty($settings['iare_crm_position_field']) && !empty($fields[$settings['iare_crm_position_field']])) {
+            $lead_data['position'] = sanitize_text_field($fields[$settings['iare_crm_position_field']]);
+        }
+
+        // Profession (optional)
+        if (!empty($settings['iare_crm_profession_field']) && !empty($fields[$settings['iare_crm_profession_field']])) {
+            $lead_data['profession'] = sanitize_text_field($fields[$settings['iare_crm_profession_field']]);
+        }
+
+        // Gender (optional)
+        if (!empty($settings['iare_crm_gender_field']) && !empty($fields[$settings['iare_crm_gender_field']])) {
+            $lead_data['gender'] = sanitize_text_field($fields[$settings['iare_crm_gender_field']]);
+        }
+
+        // City (optional)
+        if (!empty($settings['iare_crm_city_field']) && !empty($fields[$settings['iare_crm_city_field']])) {
+            $lead_data['city'] = sanitize_text_field($fields[$settings['iare_crm_city_field']]);
+        }
+
+        // State (optional)
+        if (!empty($settings['iare_crm_state_field']) && !empty($fields[$settings['iare_crm_state_field']])) {
+            $lead_data['state'] = sanitize_text_field($fields[$settings['iare_crm_state_field']]);
+        }
+
+        // Country (optional)
+        if (!empty($settings['iare_crm_country_field']) && !empty($fields[$settings['iare_crm_country_field']])) {
+            $lead_data['country'] = sanitize_text_field($fields[$settings['iare_crm_country_field']]);
+        }
+
         // Additional info from unmapped fields
         $additional_info = $this->build_additional_info($settings, $fields, $raw_fields);
         if (!empty($additional_info)) {
@@ -328,7 +424,13 @@ class IareCrmAction extends Action_Base {
             $settings['iare_crm_phone_country_code_field'] ?? '',
             $settings['iare_crm_phone_number_field'] ?? '',
             $settings['iare_crm_email_field'] ?? '',
-            $settings['iare_crm_enterprise_field'] ?? ''
+            $settings['iare_crm_enterprise_field'] ?? '',
+            $settings['iare_crm_position_field'] ?? '',
+            $settings['iare_crm_profession_field'] ?? '',
+            $settings['iare_crm_gender_field'] ?? '',
+            $settings['iare_crm_city_field'] ?? '',
+            $settings['iare_crm_state_field'] ?? '',
+            $settings['iare_crm_country_field'] ?? ''
         ]);
 
         $additional_info = [];
