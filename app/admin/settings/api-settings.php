@@ -47,7 +47,22 @@ class ApiSettings {
             return false;
         }
 
+        $current_api_key = $this->get_api_key();
+        
+        if ($current_api_key === $api_key) {
+            return true;
+        }
+
         $saved = update_option(IARE_CRM_OPTION_API_KEY, $api_key);
+
+        // Se update_option retornou false mas a API key é válida,
+        // verificar se foi realmente salva
+        if (!$saved) {
+            $saved_value = get_option(IARE_CRM_OPTION_API_KEY, '');
+            if ($saved_value === $api_key) {
+                $saved = true;
+            }
+        }
 
         if ($saved) {
             delete_transient('iare_crm_connection_status');
@@ -230,4 +245,4 @@ class ApiSettings {
         echo '<input type="password" id="api_key" name="api_key" value="' . esc_attr($api_key) . '" class="regular-text" />';
         echo '<p class="description">' . esc_html(__('Enter your iaRe CRM API key.', 'iare-crm')) . '</p>';
     }
-} 
+}
