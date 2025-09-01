@@ -26,7 +26,7 @@ class FieldMapperService {
             'sanitize' => 'sanitize_text_field'
         ],
         'phone_country_code' => [
-            'required' => true,
+            'required' => false,
             'type' => 'string',
             'sanitize' => 'sanitize_text_field',
             'default' => '55'
@@ -40,6 +40,36 @@ class FieldMapperService {
             'required' => false,
             'type' => 'email',
             'sanitize' => 'sanitize_email'
+        ],
+        'position' => [
+            'required' => false,
+            'type' => 'string',
+            'sanitize' => 'sanitize_text_field'
+        ],
+        'profession' => [
+            'required' => false,
+            'type' => 'string',
+            'sanitize' => 'sanitize_text_field'
+        ],
+        'gender' => [
+            'required' => false,
+            'type' => 'string',
+            'sanitize' => 'sanitize_text_field'
+        ],
+        'city' => [
+            'required' => false,
+            'type' => 'string',
+            'sanitize' => 'sanitize_text_field'
+        ],
+        'state' => [
+            'required' => false,
+            'type' => 'string',
+            'sanitize' => 'sanitize_text_field'
+        ],
+        'country' => [
+            'required' => false,
+            'type' => 'string',
+            'sanitize' => 'sanitize_text_field'
         ]
     ];
 
@@ -88,7 +118,13 @@ class FieldMapperService {
             'surname' => __('Surname', 'iare-crm'),
             'phone_country_code' => __('Phone Country Code', 'iare-crm'),
             'phone_number' => __('Phone Number', 'iare-crm'),
-            'email' => __('Email', 'iare-crm')
+            'email' => __('Email', 'iare-crm'),
+            'position' => __('Position', 'iare-crm'),
+            'profession' => __('Profession', 'iare-crm'),
+            'gender' => __('Gender', 'iare-crm'),
+            'city' => __('City', 'iare-crm'),
+            'state' => __('State', 'iare-crm'),
+            'country' => __('Country', 'iare-crm')
         ];
     }
 
@@ -123,4 +159,4 @@ class FieldMapperService {
     public static function is_field_required($field_name) {
         return self::API_FIELDS[$field_name]['required'] ?? false;
     }
-} 
+}
