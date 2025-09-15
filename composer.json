@@ -10,6 +10,8 @@
             "app/admin/",
             "app/api/",
             "app/helpers/",
+            "app/integrations/",
+            "app/services/",
             "app/traits/"
         ]
     },
@@ -32,4 +34,4 @@
             "composer dump-autoload"
         ]
     }
-} 
+}

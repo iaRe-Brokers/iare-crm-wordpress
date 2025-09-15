@@ -2,7 +2,7 @@
 /**
  * Plugin Name: iaRe CRM
  * Description: Complete integration with iaRe CRM system for lead capture and management
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: iaRe CRM
  * Author URI: https://crm.iare.me
  * License: GPL v2 or later
@@ -17,12 +17,12 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('IARE_CRM_VERSION', '1.0.3');
+define('IARE_CRM_VERSION', '1.0.4');
 define('IARE_CRM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('IARE_CRM_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('IARE_CRM_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
-define('IARE_CRM_API_BASE_URL', 'http://prod.iare.me');
+define('IARE_CRM_API_BASE_URL', 'https://prod.iare.me');
 define('IARE_CRM_API_VERSION', 'v1');
 define('IARE_CRM_API_ENDPOINT', '/api/' . IARE_CRM_API_VERSION);
 
