@@ -5,6 +5,7 @@ namespace IareCrm\Integrations\Elementor\FormActions;
 use IareCrm\Api\Client;
 use IareCrm\Helpers\Validator;
 use IareCrm\Integrations\Elementor\Services\FieldMapperService;
+use IareCrm\App\Services\GeolocationService;
 use ElementorPro\Modules\Forms\Classes\Action_Base;
 
 defined('ABSPATH') || exit;
@@ -205,6 +206,43 @@ class IareCrmAction extends Action_Base {
             ]
         );
 
+        // Location capture section
+        $widget->add_control(
+            'iare_crm_location_heading',
+            [
+                'label' => esc_html__('Location Settings', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        // Automatic location capture switch
+        $widget->add_control(
+            'iare_crm_auto_location',
+            [
+                'label' => esc_html__('Automatic Location Capture', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('Yes', 'iare-crm'),
+                'label_off' => esc_html__('No', 'iare-crm'),
+                'return_value' => 'yes',
+                'default' => '',
+                'description' => esc_html__('Enable automatic location detection based on visitor IP address using IP-API.com service.', 'iare-crm'),
+            ]
+        );
+
+        // Manual location mapping heading
+        $widget->add_control(
+            'iare_crm_manual_location_heading',
+            [
+                'label' => esc_html__('Manual Location Mapping', 'iare-crm'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+                'condition' => [
+                    'iare_crm_auto_location!' => 'yes',
+                ],
+            ]
+        );
+
         // City field mapping (optional)
         $widget->add_control(
             'iare_crm_city_field',
@@ -213,6 +251,9 @@ class IareCrmAction extends Action_Base {
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => $this->get_form_fields_options_safe($widget, true),
                 'description' => esc_html__('Select which form field contains the city (optional).', 'iare-crm'),
+                'condition' => [
+                    'iare_crm_auto_location!' => 'yes',
+                ],
             ]
         );
 
@@ -224,6 +265,9 @@ class IareCrmAction extends Action_Base {
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => $this->get_form_fields_options_safe($widget, true),
                 'description' => esc_html__('Select which form field contains the state (optional).', 'iare-crm'),
+                'condition' => [
+                    'iare_crm_auto_location!' => 'yes',
+                ],
             ]
         );
 
@@ -235,6 +279,9 @@ class IareCrmAction extends Action_Base {
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => $this->get_form_fields_options_safe($widget, true),
                 'description' => esc_html__('Select which form field contains the country (optional).', 'iare-crm'),
+                'condition' => [
+                    'iare_crm_auto_location!' => 'yes',
+                ],
             ]
         );
 
@@ -255,10 +302,6 @@ class IareCrmAction extends Action_Base {
         $validation_result = Validator::validate_campaigns($campaigns_input);
         
         if (!$validation_result['valid']) {
-            // Log dos erros de validação se debug estiver habilitado
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('iaRe CRM: Campaign validation errors: ' . implode(', ', $validation_result['errors']));
-            }
             return;
         }
         
@@ -280,7 +323,6 @@ class IareCrmAction extends Action_Base {
         $selected_campaign = $this->get_next_campaign($campaigns, $form_identifier);
         
         if (!$selected_campaign) {
-            // Log do erro se debug estiver habilitado
             if (defined('WP_DEBUG') && WP_DEBUG) {
                 error_log('iaRe CRM: Failed to select campaign for form ' . $form_identifier);
             }
@@ -307,11 +349,6 @@ class IareCrmAction extends Action_Base {
 
         $api_client = new Client();
         $result = $api_client->create_lead($api_key, $selected_campaign, $lead_data);
-        
-        // Log da campanha selecionada para depuração
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('iaRe CRM: Lead sent to campaign ' . $selected_campaign . ' for form ' . $form_identifier);
-        }
     }
 
     /**
@@ -377,20 +414,8 @@ class IareCrmAction extends Action_Base {
             $lead_data['gender'] = sanitize_text_field($fields[$settings['iare_crm_gender_field']]);
         }
 
-        // City (optional)
-        if (!empty($settings['iare_crm_city_field']) && !empty($fields[$settings['iare_crm_city_field']])) {
-            $lead_data['city'] = sanitize_text_field($fields[$settings['iare_crm_city_field']]);
-        }
-
-        // State (optional)
-        if (!empty($settings['iare_crm_state_field']) && !empty($fields[$settings['iare_crm_state_field']])) {
-            $lead_data['state'] = sanitize_text_field($fields[$settings['iare_crm_state_field']]);
-        }
-
-        // Country (optional)
-        if (!empty($settings['iare_crm_country_field']) && !empty($fields[$settings['iare_crm_country_field']])) {
-            $lead_data['country'] = sanitize_text_field($fields[$settings['iare_crm_country_field']]);
-        }
+        // Location data (automatic or manual)
+        $this->process_location_data($settings, $fields, $lead_data);
 
         // Additional info from unmapped fields
         $additional_info = $this->build_additional_info($settings, $fields, $raw_fields);
@@ -407,6 +432,58 @@ class IareCrmAction extends Action_Base {
          * @since 1.0.0
          */
         return apply_filters('iare_crm_lead_data', $lead_data, $settings, $fields);
+    }
+
+    /**
+     * Process location data (automatic or manual)
+     * 
+     * @param array $settings Form settings
+     * @param array $fields Submitted form fields
+     * @param array &$lead_data Lead data array (passed by reference)
+     * @return void
+     */
+    private function process_location_data($settings, $fields, &$lead_data) {
+        $auto_location_enabled = !empty($settings['iare_crm_auto_location']) && $settings['iare_crm_auto_location'] === 'yes';
+        
+        if ($auto_location_enabled) {
+            // Use automatic location capture
+            $geolocation_service = new GeolocationService();
+            $location_data = $geolocation_service->getLocationByIp();
+            
+            if ($location_data && $location_data['status'] === 'success') {
+                $formatted_location = $geolocation_service->formatLocationData($location_data);
+                
+                if (!empty($formatted_location['city'])) {
+                    $lead_data['city'] = $formatted_location['city'];
+                }
+                
+                if (!empty($formatted_location['state'])) {
+                    $lead_data['state'] = $formatted_location['state'];
+                }
+                
+                if (!empty($formatted_location['country'])) {
+                    $lead_data['country'] = $formatted_location['country'];
+                }
+            } else {
+                // Log failed automatic location capture
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log('iaRe CRM: Failed to capture automatic location data');
+                }
+            }
+        } else {
+            // Use manual field mapping
+            if (!empty($settings['iare_crm_city_field']) && !empty($fields[$settings['iare_crm_city_field']])) {
+                $lead_data['city'] = sanitize_text_field($fields[$settings['iare_crm_city_field']]);
+            }
+            
+            if (!empty($settings['iare_crm_state_field']) && !empty($fields[$settings['iare_crm_state_field']])) {
+                $lead_data['state'] = sanitize_text_field($fields[$settings['iare_crm_state_field']]);
+            }
+            
+            if (!empty($settings['iare_crm_country_field']) && !empty($fields[$settings['iare_crm_country_field']])) {
+                $lead_data['country'] = sanitize_text_field($fields[$settings['iare_crm_country_field']]);
+            }
+        }
     }
 
     /**
