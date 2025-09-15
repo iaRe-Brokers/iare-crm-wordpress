@@ -3,6 +3,7 @@
 namespace IareCrm\Core;
 
 use IareCrm\Admin\MenuManager;
+use IareCrm\Api\GeolocationEndpoints;
 use IareCrm\Traits\Singleton;
 
 defined('ABSPATH') || exit;
@@ -37,6 +38,7 @@ class Initializer {
         }
 
         $this->init_integrations();
+        $this->init_ajax_endpoints();
     }
 
     /**
@@ -56,6 +58,19 @@ class Initializer {
         }
     }
 
+    /**
+     * Initialize AJAX endpoints for geolocation
+     */
+    private function init_ajax_endpoints() {
+        GeolocationEndpoints::init();
+        
+        // Enqueue frontend AJAX scripts
+        add_action('wp_enqueue_scripts', [GeolocationEndpoints::class, 'enqueue_ajax_scripts']);
+        
+        // Enqueue admin AJAX scripts
+        add_action('admin_enqueue_scripts', [GeolocationEndpoints::class, 'enqueue_admin_ajax_scripts']);
+    }
+
     public function run() {
         /**
          * Hook executado quando o plugin iaRe CRM é totalmente carregado
@@ -64,4 +79,4 @@ class Initializer {
          */
         do_action('iare_crm_loaded');
     }
-} 
+}
