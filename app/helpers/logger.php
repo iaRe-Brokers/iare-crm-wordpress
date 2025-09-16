@@ -19,6 +19,15 @@ class Logger {
     }
 
     /**
+     * Get the log file path
+     * 
+     * @return string Path to the log file
+     */
+    public function get_log_file_path() {
+        return $this->log_file;
+    }
+
+    /**
      * Check if debug mode is enabled
      * 
      * @return bool True if debug mode is enabled
