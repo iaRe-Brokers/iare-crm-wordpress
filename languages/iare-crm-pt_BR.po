@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: iaRe CRM 1.0.0\n"
 "Report-Msgid-Bugs-To: https://crm.iare.me\n"
 "POT-Creation-Date: 2025-01-20 10:00+0000\n"
-"PO-Revision-Date: 2025-09-01 17:39+0000\n"
+"PO-Revision-Date: 2025-09-16 15:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: Português do Brasil\n"
 "Language: pt_BR\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Loco-Version: 2.8.0; wp-6.8.1; php-8.1.23"
 
 #. 1: Plugin name 2: Elementor Pro
-#: app/integrations/elementor/elementor-integration-manager.php:219
+#: app/integrations/elementor/elementor-integration-manager.php:240
 #, php-format
 msgid ""
 "\"%1$s\" requires \"%2$s\" to be installed and activated for form "
@@ -28,14 +28,14 @@ msgstr ""
 "formulários."
 
 #. 1: Plugin name 2: Elementor 3: Required Elementor version
-#: app/integrations/elementor/elementor-integration-manager.php:199
+#: app/integrations/elementor/elementor-integration-manager.php:220
 #, php-format
 msgid "\"%1$s\" requires \"%2$s\" version %3$s or greater."
 msgstr "\"%1$s\" requer \"%2$s\" versão %3$s ou superior."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:565
-#: app/integrations/elementor/form-actions/iare-crm-action.php:606
-#: app/integrations/elementor/form-actions/iare-crm-action.php:624
+#: app/integrations/elementor/form-actions/iare-crm-action.php:703
+#: app/integrations/elementor/form-actions/iare-crm-action.php:744
+#: app/integrations/elementor/form-actions/iare-crm-action.php:762
 msgid "-- Not mapped --"
 msgstr "-- Não mapeado --"
 
@@ -96,15 +96,15 @@ msgstr ""
 msgid "Additional info must be an array"
 msgstr "Informações adicionais devem ser um array"
 
-#: app/api/client.php:27 app/api/client.php:210
+#: app/api/client.php:33 app/api/client.php:324
 msgid "API base URL is not configured"
 msgstr "A URL base da API não está configurada"
 
-#: templates/admin/settings-page.php:28 app/admin/settings/api-settings.php:160
+#: templates/admin/settings-page.php:28 app/admin/settings/api-settings.php:175
 msgid "API Configuration"
 msgstr "Configuração da API"
 
-#: templates/admin/settings-page.php:36 app/admin/settings/api-settings.php:168
+#: templates/admin/settings-page.php:36 app/admin/settings/api-settings.php:183
 msgid "API Key"
 msgstr "API Key"
 
@@ -112,7 +112,7 @@ msgstr "API Key"
 msgid "API key cannot be empty."
 msgstr "API Key não pode estar vazia."
 
-#: app/admin/settings/api-settings.php:94
+#: app/admin/settings/api-settings.php:109
 msgid "API key is required for testing connection."
 msgstr "API Key é necessária para testar a conexão."
 
@@ -120,13 +120,25 @@ msgstr "API Key é necessária para testar a conexão."
 msgid "API key is required."
 msgstr "É necessário a API Key"
 
+#: app/api/geolocation-endpoints.php:168
+msgid "API test failed"
+msgstr "Falha ao testar API"
+
+#: app/api/geolocation-endpoints.php:167
+msgid "API test successful"
+msgstr "Sucesso ao testar API"
+
 #: app/helpers/validator.php:221
 msgid "At least one campaign must be selected"
 msgstr "Selecione pelo menos uma campanha"
 
-#: app/api/client.php:54
+#: app/api/client.php:71
 msgid "Authentication failed"
 msgstr "Falha de autenticação"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:229
+msgid "Automatic Location Capture"
+msgstr "Captura automática de localização"
 
 #: app/helpers/validator.php:238
 msgid "Campaign at position %d is empty"
@@ -137,7 +149,7 @@ msgstr "A campanha na posição %d está vazia"
 msgid "Campaign ID \"%s\" contains invalid characters"
 msgstr "O ID da campanha \"%s\" contém caracteres inválidos"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:63
+#: app/integrations/elementor/form-actions/iare-crm-action.php:70
 msgid "Campaigns"
 msgstr "Campanhas"
 
@@ -145,11 +157,11 @@ msgstr "Campanhas"
 msgid "Campaigns must be an array or string"
 msgstr "As campanhas devem ser um arry ou string"
 
-#: app/api/client.php:93
+#: app/api/client.php:130
 msgid "Campaigns retrieved successfully"
 msgstr "Campanhas recuperadas com sucesso"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:76
+#: app/integrations/elementor/form-actions/iare-crm-action.php:83
 msgid "Capture Source"
 msgstr "Fonte de Captação"
 
@@ -161,9 +173,13 @@ msgstr "Fonte de Captação deve ter no máximo 100 caracteres"
 msgid "City"
 msgstr "Cidade"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:212
+#: app/integrations/elementor/form-actions/iare-crm-action.php:256
 msgid "City Field"
 msgstr "Campo de Cidade"
+
+#: templates/admin/debug-page.php:51
+msgid "Clear Logs"
+msgstr "Limpar Logs"
 
 #: templates/admin/settings-page.php:153
 msgid "Close modal"
@@ -178,7 +194,7 @@ msgstr "Integração completa com o iaRe CRM para capturar leads"
 msgid "Configure your connection to the iaRe CRM system."
 msgstr "Configure sua conexão com o iaRe CRM"
 
-#: app/admin/settings/api-settings.php:221
+#: app/admin/settings/api-settings.php:241
 msgid "Configure your iaRe CRM API connection settings."
 msgstr "Configure suas configurações de conexão da API do iaRe CRM."
 
@@ -187,7 +203,7 @@ msgid "Connected"
 msgstr "Contectado"
 
 #. %s: Error message from the API connection
-#: app/api/client.php:38
+#: app/api/client.php:47
 #, php-format
 msgid "Connection error: %s"
 msgstr "Erro de conexão: %s"
@@ -196,7 +212,7 @@ msgstr "Erro de conexão: %s"
 msgid "Connection Failed"
 msgstr "Falha na conexão"
 
-#: app/admin/menu-manager.php:87
+#: app/admin/menu-manager.php:110
 msgid "Connection failed. Please check your API key."
 msgstr "Falha na conexão. Verifique sua chave de API."
 
@@ -208,11 +224,11 @@ msgstr "Status da conexão"
 msgid "Connection status unknown"
 msgstr "Status de conexão desconhecido"
 
-#: app/api/client.php:49
+#: app/api/client.php:66
 msgid "Connection successful"
 msgstr "Conexão bem-sucedida"
 
-#: app/admin/menu-manager.php:86
+#: app/admin/menu-manager.php:109
 msgid "Connection successful!"
 msgstr "Conexão bem-sucedida!"
 
@@ -220,31 +236,55 @@ msgstr "Conexão bem-sucedida!"
 msgid "Country"
 msgstr "País"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:234
+#: app/integrations/elementor/form-actions/iare-crm-action.php:284
 msgid "Country Field"
 msgstr "Campo de País"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:131
+#: app/admin/menu-manager.php:51
+msgid "Debug"
+msgstr "Debug"
+
+#: app/admin/pages/debug-page.php:50
+msgid "Debug mode disabled."
+msgstr "Debug desabilitado."
+
+#: app/admin/pages/debug-page.php:45
+msgid "Debug mode enabled."
+msgstr "Debug ativado."
+
+#: app/admin/menu-manager.php:50 templates/admin/debug-page.php:24
+msgid "Debug Settings"
+msgstr "Configurações de depuração"
+
+#: templates/admin/debug-page.php:14
+msgid "Debug settings and logs"
+msgstr "Configurações e logs de depuração"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:138
 msgid "Default Country Code"
 msgstr "Código de país padrão"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:135
+#: app/integrations/elementor/form-actions/iare-crm-action.php:142
 msgid ""
 "Default country code to use if no field is mapped (e.g., 55 for Brazil)."
 msgstr ""
 "Código de país padrão a ser usado se nenhum campo for mapeado (por exemplo, "
 "55 para o Brasil)."
 
+#: templates/admin/debug-page.php:54
+msgid "Download Logs"
+msgstr "Baixar Logs"
+
 #: app/helpers/validator.php:250
 #, php-format
 msgid "Duplicate campaign ID \"%s\""
 msgstr "ID de campanha duplicado \"%s\""
 
-#: app/integrations/elementor/elementor-integration-manager.php:201
+#: app/integrations/elementor/elementor-integration-manager.php:222
 msgid "Elementor"
 msgstr "Elementor"
 
-#: app/integrations/elementor/elementor-integration-manager.php:221
+#: app/integrations/elementor/elementor-integration-manager.php:242
 msgid "Elementor Pro"
 msgstr "Elementor Pro"
 
@@ -252,9 +292,26 @@ msgstr "Elementor Pro"
 msgid "Email"
 msgstr "E-mail"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:157
+#: app/integrations/elementor/form-actions/iare-crm-action.php:164
 msgid "Email Field"
 msgstr "Compo de E-mail"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:235
+msgid ""
+"Enable automatic location detection based on visitor IP address using IP-API."
+"com service."
+msgstr ""
+"Habilite a detecção automática de localização com base no endereço IP do "
+"visitante usando o serviço IP-API.com."
+
+#: templates/admin/debug-page.php:33
+msgid "Enable Debug Mode"
+msgstr "Habilitar modo de depuração"
+
+#: templates/admin/debug-page.php:36
+msgid "Enable this option to start logging debug information."
+msgstr ""
+"Habilite esta opção para iniciar o registro de informações de depuração."
 
 #: templates/admin/settings-page.php:109
 msgid "Enter your API key and test the connection."
@@ -264,11 +321,11 @@ msgstr "Insira sua API Key e teste a conexão."
 msgid "Enter your iaRe CRM API key to connect your site."
 msgstr "Insira sua API Key do iaRe CRM para conectar seu site."
 
-#: app/admin/settings/api-settings.php:231
+#: app/admin/settings/api-settings.php:251
 msgid "Enter your iaRe CRM API key."
 msgstr "Insira sua API Key do iaRe CRM"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:168
+#: app/integrations/elementor/form-actions/iare-crm-action.php:175
 msgid "Enterprise Field"
 msgstr "Campo do Empreendimento"
 
@@ -276,11 +333,19 @@ msgstr "Campo do Empreendimento"
 msgid "Enterprise must be at most 50 characters"
 msgstr "Empreendimento deve ter no máximo 50 caracteres"
 
-#: app/api/client.php:149
+#: templates/admin/debug-page.php:65
+msgid "Error Logs"
+msgstr "Registros de erros"
+
+#: app/api/client.php:212
 msgid "Failed to create lead"
 msgstr "Falha ao criar lead"
 
-#: app/api/client.php:100
+#: app/api/geolocation-endpoints.php:137
+msgid "Failed to load location data"
+msgstr "Falha ao carregar dados de localização"
+
+#: app/api/client.php:135
 msgid "Failed to retrieve campaigns"
 msgstr "Falha ao listar campanhas"
 
@@ -288,7 +353,7 @@ msgstr "Falha ao listar campanhas"
 msgid "Failed to save settings."
 msgstr "Falha ao salvar as configurações."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:88
+#: app/integrations/elementor/form-actions/iare-crm-action.php:95
 msgid "Field Mapping"
 msgstr "Mapeamento de campo"
 
@@ -303,15 +368,15 @@ msgstr "Mapeamento de campo necessário: %s"
 msgid "Gender"
 msgstr "Gênero"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:201
+#: app/integrations/elementor/form-actions/iare-crm-action.php:208
 msgid "Gender Field"
 msgstr "Campo de Gênero"
 
 #: templates/admin/settings-page.php:136
 msgid "Getting Started"
-msgstr ""
+msgstr "Getting Started"
 
-#: app/api/client.php:228
+#: app/api/client.php:351
 msgid "Health check completed"
 msgstr "Verificação de conexão concluída"
 
@@ -321,16 +386,20 @@ msgstr "https://crm.iare.me"
 
 #. Name of the plugin
 #. Author of the plugin
-#: app/admin/menu-manager.php:26 app/admin/menu-manager.php:27
-#: app/integrations/elementor/form-actions/iare-crm-action.php:36
-#: app/integrations/elementor/form-actions/iare-crm-action.php:52
+#: app/admin/menu-manager.php:29 app/admin/menu-manager.php:30
+#: app/integrations/elementor/form-actions/iare-crm-action.php:43
+#: app/integrations/elementor/form-actions/iare-crm-action.php:59
 msgid "iaRe CRM"
 msgstr "iaRe CRM"
 
-#: app/integrations/elementor/elementor-integration-manager.php:200
-#: app/integrations/elementor/elementor-integration-manager.php:220
+#: app/integrations/elementor/elementor-integration-manager.php:221
+#: app/integrations/elementor/elementor-integration-manager.php:241
 msgid "iaRe CRM - Elementor Integration"
 msgstr "iaRe CRM - Elementor Integration"
+
+#: templates/admin/debug-page.php:11
+msgid "iaRe CRM Debug"
+msgstr "iaRe CRM Debug"
 
 #: app/core/activator.php:17
 msgid "iaRe CRM requires PHP version 7.4 or higher."
@@ -350,7 +419,7 @@ msgstr "iaRe CRM - Configurações"
 msgid "Integration Limit:"
 msgstr "Limite de integração:"
 
-#: app/admin/pages/settings-page.php:73 app/admin/settings/api-settings.php:107
+#: app/admin/pages/settings-page.php:73 app/admin/settings/api-settings.php:122
 msgid "Invalid API key format."
 msgstr "API Key inválida"
 
@@ -358,13 +427,33 @@ msgstr "API Key inválida"
 msgid "Invalid email format"
 msgstr "Formato de e-mail inválido"
 
-#: app/api/client.php:119
+#: app/api/client.php:170
 msgid "Invalid lead data"
 msgstr "Dados de lead inválidos"
 
-#: app/api/client.php:142
+#: app/api/client.php:207
 msgid "Lead created successfully"
 msgstr "Lead criado com sucesso"
+
+#: app/api/geolocation-endpoints.php:136
+msgid "Loading location..."
+msgstr "Carregando localização..."
+
+#: app/api/geolocation-endpoints.php:138
+msgid "Location loaded successfully"
+msgstr "Localização carregada com sucesso"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:219
+msgid "Location Settings"
+msgstr "Configurações de localização"
+
+#: app/admin/pages/debug-page.php:85
+msgid "Log file does not exist."
+msgstr "Ainda não existe logs."
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:243
+msgid "Manual Location Mapping"
+msgstr "Mapear localização manualmente"
 
 #: app/helpers/validator.php:227
 msgid "Maximum of 10 campaigns allowed"
@@ -374,7 +463,7 @@ msgstr "Máximo de 10 campanhas"
 msgid "Name"
 msgstr "Nome"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:98
+#: app/integrations/elementor/form-actions/iare-crm-action.php:105
 msgid "Name Field"
 msgstr "Campo de Nome"
 
@@ -386,6 +475,10 @@ msgstr "Nome é obrigatório"
 msgid "Name:"
 msgstr "Nome: "
 
+#: app/integrations/elementor/form-actions/iare-crm-action.php:232
+msgid "No"
+msgstr "Não"
+
 #: templates/admin/settings-page.php:93
 msgid "No API Key"
 msgstr "Nenhuma API Key"
@@ -394,9 +487,13 @@ msgstr "Nenhuma API Key"
 msgid "No API key configured"
 msgstr "Nenhuma API Key configurada"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:517
+#: app/integrations/elementor/form-actions/iare-crm-action.php:655
 msgid "No campaigns available (check API key)"
 msgstr "Nenhuma campanha disponível (verifique a API Key)"
+
+#: templates/admin/debug-page.php:77
+msgid "No error logs found."
+msgstr "Nenhum registro de erro encontrado."
 
 #: templates/admin/settings-page.php:80
 msgid "Not Connected"
@@ -410,11 +507,15 @@ msgstr "Somente as 10 primeiras campanhas serão utilizadas"
 msgid "Partner Information"
 msgstr "Informações do parceiro"
 
+#: templates/admin/debug-page.php:41
+msgid "Performance Warning:"
+msgstr "Aviso de desempenho:"
+
 #: app/integrations/elementor/services/field-mapper-service.php:119
 msgid "Phone Country Code"
 msgstr "Código do país (DDI)"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:120
+#: app/integrations/elementor/form-actions/iare-crm-action.php:127
 msgid "Phone Country Code Field"
 msgstr "Campo de DDI"
 
@@ -422,7 +523,7 @@ msgstr "Campo de DDI"
 msgid "Phone Number"
 msgstr "Número de telefone"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:146
+#: app/integrations/elementor/form-actions/iare-crm-action.php:153
 msgid "Phone Number Field"
 msgstr "Campo de Telefone"
 
@@ -438,7 +539,7 @@ msgstr "Plano:"
 msgid "Position"
 msgstr "Cargo"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:179
+#: app/integrations/elementor/form-actions/iare-crm-action.php:186
 msgid "Position Field"
 msgstr "Campo de Cargo"
 
@@ -446,79 +547,80 @@ msgstr "Campo de Cargo"
 msgid "Profession"
 msgstr "Profissão"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:190
+#: app/integrations/elementor/form-actions/iare-crm-action.php:197
 msgid "Profession Field"
 msgstr "Campo de Profissão"
 
-#: templates/admin/settings-page.php:58
+#: templates/admin/debug-page.php:46 templates/admin/settings-page.php:58
 msgid "Save Settings"
 msgstr "Salvar Configurações"
 
+#: app/admin/pages/debug-page.php:63 app/admin/pages/debug-page.php:81
 #: app/admin/pages/settings-page.php:53
 msgid "Security check failed."
 msgstr "A verificação de segurança falhou."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:508
+#: app/integrations/elementor/form-actions/iare-crm-action.php:646
 msgid "Select Campaign"
 msgstr "Selecione a Campanha"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:67
+#: app/integrations/elementor/form-actions/iare-crm-action.php:74
 msgid "Select one or more campaigns to distribute leads to."
 msgstr "Selecione uma ou mais campanhas para distribuir leads."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:215
+#: app/integrations/elementor/form-actions/iare-crm-action.php:259
 msgid "Select which form field contains the city (optional)."
 msgstr "Selecione qual campo do formulário contém a cidade (opcional)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:237
+#: app/integrations/elementor/form-actions/iare-crm-action.php:287
 msgid "Select which form field contains the country (optional)."
 msgstr "Selecione qual campo do formulário contém o país (opcional)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:171
+#: app/integrations/elementor/form-actions/iare-crm-action.php:178
 msgid "Select which form field contains the enterprise name (optional)."
 msgstr ""
 "Selecione qual campo do formulário contém o nome do empreendimento (opcional)"
 "."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:204
+#: app/integrations/elementor/form-actions/iare-crm-action.php:211
 msgid "Select which form field contains the gender (optional)."
 msgstr "Selecione qual campo do formulário contém o gênero (opcional)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:160
+#: app/integrations/elementor/form-actions/iare-crm-action.php:167
 msgid "Select which form field contains the lead email (optional)."
 msgstr "Selecione qual campo do formulário contém o e-mail do lead (opcional)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:101
+#: app/integrations/elementor/form-actions/iare-crm-action.php:108
 msgid "Select which form field contains the lead name."
 msgstr "Selecione qual campo do formulário contém o nome do lead."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:149
+#: app/integrations/elementor/form-actions/iare-crm-action.php:156
 msgid "Select which form field contains the lead phone number."
 msgstr ""
 "Selecione qual campo do formulário contém o número de telefone do lead."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:112
+#: app/integrations/elementor/form-actions/iare-crm-action.php:119
 msgid "Select which form field contains the lead surname (optional)."
 msgstr "Selecione qual campo do formulário contém o sobrenome (opcional)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:123
+#: app/integrations/elementor/form-actions/iare-crm-action.php:130
 msgid "Select which form field contains the phone country code (optional)."
 msgstr ""
 "Selecione qual campo do formulário contém o código do país (DDI) (opcional)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:182
+#: app/integrations/elementor/form-actions/iare-crm-action.php:189
 msgid "Select which form field contains the position (optional)."
 msgstr "Selecione qual campo do formulário contém o cargo (opcional)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:193
+#: app/integrations/elementor/form-actions/iare-crm-action.php:200
 msgid "Select which form field contains the profession (optional)."
 msgstr "Selecione qual campo do formulário contém a profissão (opcional)."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:226
+#: app/integrations/elementor/form-actions/iare-crm-action.php:273
 msgid "Select which form field contains the state (optional)."
 msgstr "Selecione qual campo do formulário contém o estado (opcional)."
 
-#: app/admin/menu-manager.php:37 app/admin/menu-manager.php:38
+#: app/admin/menu-manager.php:40 app/admin/menu-manager.php:41
 msgid "Settings"
 msgstr "Configurações"
 
@@ -526,7 +628,7 @@ msgstr "Configurações"
 msgid "Settings saved successfully."
 msgstr "Configurações salvas com sucesso."
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:80
+#: app/integrations/elementor/form-actions/iare-crm-action.php:87
 msgid "Source of lead capture (leave blank to use \"WordPress\" as default)."
 msgstr ""
 "Fonte de Captação (deixe em branco para usar \"WordPress\" como padrão)."
@@ -535,7 +637,7 @@ msgstr ""
 msgid "State"
 msgstr "Estado (UF)"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:223
+#: app/integrations/elementor/form-actions/iare-crm-action.php:270
 msgid "State Field"
 msgstr "Campo de Estado (UF)"
 
@@ -543,7 +645,7 @@ msgstr "Campo de Estado (UF)"
 msgid "Surname"
 msgstr "Sobrenome"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:109
+#: app/integrations/elementor/form-actions/iare-crm-action.php:116
 msgid "Surname Field"
 msgstr "Campo de Sobrenome"
 
@@ -551,22 +653,40 @@ msgstr "Campo de Sobrenome"
 msgid "Test Connection"
 msgstr "Testar Conexão"
 
-#: app/admin/menu-manager.php:85
+#: app/api/geolocation-endpoints.php:166
+msgid "Testing API connectivity..."
+msgstr "Testando conectividade de API..."
+
+#: app/admin/menu-manager.php:108
 msgid "Testing connection..."
 msgstr "Testando conexão..."
+
+#: templates/admin/debug-page.php:41
+msgid ""
+"This option should only be enabled for debugging purposes as it may impact "
+"site performance."
+msgstr ""
+"Esta opção só deve ser habilitada para fins de depuração, pois pode afetar o "
+"desempenho do site."
 
 #: templates/admin/settings-page.php:47
 msgid "Toggle API key visibility"
 msgstr "Ver API Key"
 
-#: app/integrations/elementor/form-actions/iare-crm-action.php:453
+#: app/integrations/elementor/form-actions/iare-crm-action.php:591
 msgid "URL Cadastro"
 msgstr "URL Cadastro"
+
+#: app/integrations/elementor/form-actions/iare-crm-action.php:231
+msgid "Yes"
+msgstr "Sim"
 
 #: app/admin/pages/settings-page.php:108
 msgid "You do not have permission to perform this action."
 msgstr "Você não tem permissão para executar esta ação."
 
+#: app/admin/pages/debug-page.php:37 app/admin/pages/debug-page.php:59
+#: app/admin/pages/debug-page.php:77 app/admin/pages/debug-page.php:104
 #: app/admin/pages/settings-page.php:37
 msgid "You do not have sufficient permissions to access this page."
 msgstr "Você não tem permissões suficientes para acessar esta página."
