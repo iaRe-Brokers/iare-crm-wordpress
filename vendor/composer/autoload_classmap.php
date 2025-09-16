@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'IareCrm\\Admin\\MenuManager' => $baseDir . '/app/admin/menu-manager.php',
+    'IareCrm\\Admin\\Pages\\DebugPage' => $baseDir . '/app/admin/pages/debug-page.php',
     'IareCrm\\Admin\\Pages\\SettingsPage' => $baseDir . '/app/admin/pages/settings-page.php',
     'IareCrm\\Admin\\Settings\\ApiSettings' => $baseDir . '/app/admin/settings/api-settings.php',
     'IareCrm\\Api\\Client' => $baseDir . '/app/api/client.php',
@@ -16,6 +17,7 @@ return array(
     'IareCrm\\Core\\Activator' => $baseDir . '/app/core/activator.php',
     'IareCrm\\Core\\Deactivator' => $baseDir . '/app/core/deactivator.php',
     'IareCrm\\Core\\Initializer' => $baseDir . '/app/core/initializer.php',
+    'IareCrm\\Helpers\\Logger' => $baseDir . '/app/helpers/logger.php',
     'IareCrm\\Helpers\\Validator' => $baseDir . '/app/helpers/validator.php',
     'IareCrm\\Integrations\\Elementor\\ElementorIntegrationManager' => $baseDir . '/app/integrations/elementor/elementor-integration-manager.php',
     'IareCrm\\Integrations\\Elementor\\FormActions\\IareCrmAction' => $baseDir . '/app/integrations/elementor/form-actions/iare-crm-action.php',
