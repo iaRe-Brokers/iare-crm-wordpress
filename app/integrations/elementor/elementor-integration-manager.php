@@ -3,6 +3,7 @@
 namespace IareCrm\Integrations\Elementor;
 
 use IareCrm\Traits\Singleton;
+use IareCrm\Helpers\Logger;
 
 defined('ABSPATH') || exit;
 
@@ -17,6 +18,7 @@ class ElementorIntegrationManager {
     private $initialized = false;
     private $elementor_initialized = false;
     private static $global_initialized = false;
+    private $logger = null;
     const MIN_ELEMENTOR_VERSION = '3.0.0';
     const MIN_ELEMENTOR_PRO_VERSION = '3.0.0';
 
@@ -24,6 +26,7 @@ class ElementorIntegrationManager {
      * Initialize integration
      */
     protected function __construct() {
+        $this->logger = new Logger();
         add_action('plugins_loaded', [$this, 'init'], 30);
     }
 
@@ -32,15 +35,18 @@ class ElementorIntegrationManager {
      */
     public function init() {
         if (self::$global_initialized) {
+            $this->logger->info('Elementor integration already initialized globally.');
             return;
         }
 
         if (!$this->is_compatible()) {
+            $this->logger->warning('Elementor integration not compatible with current versions.');
             add_action('admin_notices', [$this, 'admin_notice_minimum_version']);
             return;
         }
 
         if (!$this->is_elementor_pro_loaded()) {
+            $this->logger->warning('Elementor Pro is not loaded.');
             add_action('admin_notices', [$this, 'admin_notice_elementor_pro_required']);
             return;
         }
@@ -48,6 +54,7 @@ class ElementorIntegrationManager {
         add_action('elementor/init', [$this, 'elementor_init']);
 
         self::$global_initialized = true;
+        $this->logger->info('Elementor integration initialized.');
     }
 
     /**
@@ -55,24 +62,30 @@ class ElementorIntegrationManager {
      */
     public function elementor_init() {
         if ($this->elementor_initialized) {
+            $this->logger->info('Elementor integration already initialized.');
             return;
         }
 
         if (!$this->is_elementor_pro_loaded()) {
+            $this->logger->warning('Elementor Pro is not loaded during elementor_init.');
             add_action('admin_notices', [$this, 'admin_notice_elementor_pro_required']);
             $this->elementor_initialized = true;
             return;
         }
 
         if (did_action('elementor_pro/forms/actions/register')) {
+            $this->logger->info('Elementor forms actions hook already fired, using direct registration.');
             $this->try_direct_registration();
         } else {
+            $this->logger->info('Adding action for elementor_pro/forms/actions/register hook.');
             add_action('elementor_pro/forms/actions/register', [$this, 'register_form_actions']);
         }
 
         $this->init_utm_capture();
         $this->clear_elementor_cache();
         $this->elementor_initialized = true;
+        
+        $this->logger->info('Elementor initialization completed.');
     }
 
     /**
@@ -108,16 +121,22 @@ class ElementorIntegrationManager {
      * Register form actions
      */
     public function register_form_actions($form_actions_registrar) {
+        $this->logger->info('Registering iaRe CRM form action.');
+        
         require_once IARE_CRM_PLUGIN_PATH . 'app/integrations/elementor/form-actions/iare-crm-action.php';
         
         $action = new \IareCrm\Integrations\Elementor\FormActions\IareCrmAction();
         $form_actions_registrar->register($action);
+        
+        $this->logger->info('iaRe CRM form action registered successfully.');
     }
 
     /**
      * Try direct registration if hook already fired
      */
     private function try_direct_registration() {
+        $this->logger->info('Attempting direct registration of form actions.');
+        
         // Approach 1: Through ElementorPro Plugin
         if (class_exists('ElementorPro\Plugin')) {
             $elementor_pro = \ElementorPro\Plugin::instance();
@@ -127,6 +146,7 @@ class ElementorIntegrationManager {
                     $registrar = $forms_module->get_form_actions_registrar();
                     if ($registrar) {
                         $this->register_form_actions($registrar);
+                        $this->logger->info('Form actions registered via ElementorPro Plugin approach.');
                         return;
                     }
                 }
@@ -144,6 +164,7 @@ class ElementorIntegrationManager {
                         $registrar = $forms_module->$method();
                         if ($registrar) {
                             $this->register_form_actions($registrar);
+                            $this->logger->info('Form actions registered via Forms Module singleton approach.');
                             return;
                         }
                     }
@@ -162,18 +183,18 @@ class ElementorIntegrationManager {
                             
                             if ($registrar && method_exists($registrar, 'register')) {
                                 $this->register_form_actions($registrar);
+                                $this->logger->info('Form actions registered via reflection approach.');
                                 return;
                             }
                         }
                     }
                 } catch (\Exception $e) {
-                    if (defined('WP_DEBUG') && WP_DEBUG) {
-                        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug logging only when WP_DEBUG is enabled
-                        error_log('iaRe CRM: Reflection approach failed: ' . $e->getMessage());
-                    }
+                    $this->logger->error('Reflection approach failed: ' . $e->getMessage());
                 }
             }
         }
+        
+        $this->logger->warning('Failed to register form actions via any approach.');
     }
 
     /**
