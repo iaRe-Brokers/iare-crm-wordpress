@@ -1,0 +1,43 @@
+/* Additional CSS for Debug Page */
+
+/* Notice Styles */
+.iare-crm-notice {
+    padding: 12px 16px;
+    border-left: 4px solid #d63638;
+    background: #fcf0f1;
+    margin: 20px 0;
+}
+
+.iare-crm-notice-warning {
+    border-left-color: #dba617;
+    background: #fcf9e8;
+}
+
+.iare-crm-notice p {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* Debug Logs */
+.iare-crm-debug-logs {
+    max-height: 500px;
+    overflow-y: auto;
+    background: #f6f7f7;
+    padding: 15px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.iare-crm-debug-log-entry {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #dcdcde;
+}
+
+.iare-crm-debug-log-entry:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
