@@ -4,6 +4,7 @@ namespace IareCrm\Admin;
 
 use IareCrm\Traits\Singleton;
 use IareCrm\Admin\Pages\SettingsPage;
+use IareCrm\Admin\Pages\DebugPage;
 
 defined('ABSPATH') || exit;
 
@@ -11,6 +12,7 @@ class MenuManager {
     use Singleton;
 
     private $settings_page;
+    private $debug_page;
 
     protected function __construct() {
         add_action('admin_menu', [$this, 'add_admin_menu']);
@@ -19,6 +21,7 @@ class MenuManager {
         add_action('admin_head', [$this, 'hide_wordpress_notices_late'], 999);
         
         $this->settings_page = SettingsPage::get_instance();
+        $this->debug_page = DebugPage::get_instance();
     }
 
     public function add_admin_menu() {
@@ -39,6 +42,16 @@ class MenuManager {
             'manage_iare_crm',
             'iare-crm',
             [$this->settings_page, 'render']
+        );
+        
+        // Add debug submenu
+        add_submenu_page(
+            'iare-crm',
+            __('Debug Settings', 'iare-crm'),
+            __('Debug', 'iare-crm'),
+            'manage_iare_crm_debug',
+            'iare-crm-debug',
+            [$this->debug_page, 'render']
         );
     }
 
@@ -70,6 +83,16 @@ c36 -33 69 -66 72 -75 12 -30 5 -63 -16 -83 -29 -27 -57 -25 -98 5 -43 32 -71
             IARE_CRM_VERSION
         );
 
+        // Enqueue additional CSS for debug page
+        if (strpos($hook, 'iare-crm-debug') !== false) {
+            wp_enqueue_style(
+                'iare-crm-debug',
+                IARE_CRM_PLUGIN_URL . 'assets/css/admin/debug.css',
+                ['iare-crm-admin'],
+                IARE_CRM_VERSION
+            );
+        }
+
         wp_enqueue_script(
             'iare-crm-admin',
             IARE_CRM_PLUGIN_URL . 'assets/js/admin/settings.js',
@@ -82,9 +105,9 @@ c36 -33 69 -66 72 -75 12 -30 5 -63 -16 -83 -29 -27 -57 -25 -98 5 -43 32 -71
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('iare_crm_ajax_nonce'),
             'messages' => [
-                            'testing_connection' => __('Testing connection...', 'iare-crm'),
-            'connection_success' => __('Connection successful!', 'iare-crm'),
-            'connection_failed' => __('Connection failed. Please check your API key.', 'iare-crm'),
+                'testing_connection' => __('Testing connection...', 'iare-crm'),
+                'connection_success' => __('Connection successful!', 'iare-crm'),
+                'connection_failed' => __('Connection failed. Please check your API key.', 'iare-crm'),
             ]
         ]);
     }
