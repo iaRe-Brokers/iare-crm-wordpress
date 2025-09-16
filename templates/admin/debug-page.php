@@ -50,6 +50,9 @@ if (!defined('ABSPATH')) {
                                 <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=iare_crm_clear_debug_logs'), 'iare_crm_clear_logs')); ?>" class="iare-crm-btn iare-crm-btn-secondary">
                                     <?php esc_html_e('Clear Logs', 'iare-crm'); ?>
                                 </a>
+                                <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=iare_crm_download_debug_logs'), 'iare_crm_download_logs')); ?>" class="iare-crm-btn iare-crm-btn-secondary">
+                                    <?php esc_html_e('Download Logs', 'iare-crm'); ?>
+                                </a>
                             <?php endif; ?>
                         </div>
                     </form>
