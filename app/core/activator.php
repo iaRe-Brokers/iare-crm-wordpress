@@ -44,6 +44,7 @@ class Activator {
         if ($role) {
             $role->add_cap('manage_iare_crm');
             $role->add_cap('view_iare_crm_logs');
+            $role->add_cap('manage_iare_crm_debug');
         }
     }
 } 
