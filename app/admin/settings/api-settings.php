@@ -194,6 +194,7 @@ class ApiSettings {
         return [
             'default_campaign_id' => '',
             'enable_logging' => true,
+            'enable_debug' => false,
             'cache_duration' => 3600,
         ];
     }
@@ -220,6 +221,10 @@ class ApiSettings {
 
         if (isset($input['enable_logging'])) {
             $sanitized['enable_logging'] = (bool) $input['enable_logging'];
+        }
+
+        if (isset($input['enable_debug'])) {
+            $sanitized['enable_debug'] = (bool) $input['enable_debug'];
         }
 
         if (isset($input['cache_duration'])) {
