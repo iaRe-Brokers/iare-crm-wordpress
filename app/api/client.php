@@ -3,6 +3,7 @@
 namespace IareCrm\Api;
 
 use IareCrm\Helpers\Validator;
+use IareCrm\Helpers\Logger;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,15 +14,20 @@ class Client {
     private $base_url;
     private $version;
     private $timeout;
+    private $logger;
 
     public function __construct() {
         $this->base_url = IARE_CRM_API_BASE_URL;
         $this->version = IARE_CRM_API_VERSION;
         $this->timeout = 30;
+        $this->logger = new Logger();
     }
 
     public function test_connection($api_key) {
+        $this->logger->info('Iniciando teste de conexão com a API', ['api_key' => substr($api_key, 0, 5) . '...']);
+        
         if (empty($this->base_url)) {
+            $this->logger->error('URL base da API não configurada');
             return [
                 'success' => false,
                 'message' => __('API base URL is not configured', 'iare-crm'),
@@ -32,6 +38,9 @@ class Client {
         $response = $this->make_request('GET', '/auth/validate', [], $api_key);
 
         if (is_wp_error($response)) {
+            $this->logger->error('Erro na requisição de teste de conexão', [
+                'error' => $response->get_error_message()
+            ]);
             return [
                 'success' => false,
                 /* translators: %s: Error message from the API connection */
@@ -42,8 +51,16 @@ class Client {
 
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
+        $response_code = wp_remote_retrieve_response_code($response);
 
-        if (wp_remote_retrieve_response_code($response) === 200 && isset($data['success']) && $data['success']) {
+        $this->logger->info('Resposta da API recebida', [
+            'response_code' => $response_code,
+            'has_success' => isset($data['success']),
+            'success_value' => $data['success'] ?? null
+        ]);
+
+        if ($response_code === 200 && isset($data['success']) && $data['success']) {
+            $this->logger->info('Teste de conexão bem-sucedido');
             return [
                 'success' => true,
                 'message' => __('Connection successful', 'iare-crm'),
@@ -51,10 +68,15 @@ class Client {
             ];
         }
 
-                    $error_message = __('Authentication failed', 'iare-crm');
+        $error_message = __('Authentication failed', 'iare-crm');
         if (isset($data['error']['message'])) {
             $error_message = $data['error']['message'];
         }
+
+        $this->logger->error('Falha na autenticação', [
+            'response_code' => $response_code,
+            'error_message' => $error_message
+        ]);
 
         return [
             'success' => false,
@@ -64,6 +86,8 @@ class Client {
     }
 
     public function get_campaigns($api_key, $params = []) {
+        $this->logger->info('Obtendo campanhas da API', ['params' => $params]);
+        
         $default_params = [
             'page' => 1,
             'limit' => 10,
@@ -77,6 +101,9 @@ class Client {
         $response = $this->make_request('GET', '/campaigns?' . $query_string, [], $api_key);
 
         if (is_wp_error($response)) {
+            $this->logger->error('Erro ao obter campanhas', [
+                'error' => $response->get_error_message()
+            ]);
             return [
                 'success' => false,
                 'message' => $response->get_error_message(),
@@ -86,8 +113,18 @@ class Client {
 
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
+        $response_code = wp_remote_retrieve_response_code($response);
 
-        if (wp_remote_retrieve_response_code($response) === 200 && isset($data['success']) && $data['success']) {
+        $this->logger->info('Resposta da API de campanhas recebida', [
+            'response_code' => $response_code,
+            'has_success' => isset($data['success']),
+            'success_value' => $data['success'] ?? null
+        ]);
+
+        if ($response_code === 200 && isset($data['success']) && $data['success']) {
+            $this->logger->info('Campanhas obtidas com sucesso', [
+                'campaigns_count' => isset($data['data']['campaigns']) ? count($data['data']['campaigns']) : 0
+            ]);
             return [
                 'success' => true,
                 'message' => __('Campaigns retrieved successfully', 'iare-crm'),
@@ -95,9 +132,15 @@ class Client {
             ];
         }
 
+        $error_message = $data['error']['message'] ?? __('Failed to retrieve campaigns', 'iare-crm');
+        $this->logger->error('Falha ao obter campanhas', [
+            'response_code' => $response_code,
+            'error_message' => $error_message
+        ]);
+
         return [
             'success' => false,
-                            'message' => $data['error']['message'] ?? __('Failed to retrieve campaigns', 'iare-crm'),
+            'message' => $error_message,
             'data' => null
         ];
     }
@@ -111,9 +154,21 @@ class Client {
      * @return array Response with creation result
      */
     public function create_lead($api_key, $campaign_id, $lead_data) {
+        $this->logger->info('Criando lead na API', [
+            'campaign_id' => $campaign_id,
+            'lead_data' => [
+                'name' => $lead_data['name'] ?? '',
+                'phone_number' => $lead_data['phone_number'] ?? '',
+                'email' => $lead_data['email'] ?? ''
+            ]
+        ]);
+        
         // Validate lead data
         $validation = Validator::validate_lead_data($lead_data);
         if (!$validation['valid']) {
+            $this->logger->error('Dados de lead inválidos', [
+                'validation_errors' => $validation['errors']
+            ]);
             return [
                 'success' => false,
                 'message' => __('Invalid lead data', 'iare-crm'),
@@ -125,6 +180,9 @@ class Client {
         $response = $this->make_request('POST', $endpoint, $lead_data, $api_key);
 
         if (is_wp_error($response)) {
+            $this->logger->error('Erro ao criar lead', [
+                'error' => $response->get_error_message()
+            ]);
             return [
                 'success' => false,
                 'message' => $response->get_error_message(),
@@ -136,7 +194,17 @@ class Client {
         $response_code = wp_remote_retrieve_response_code($response);
         $data = json_decode($body, true);
 
-        if ($response_code === 200 && isset($data['success']) && $data['success']) {
+        $this->logger->info('Resposta da API ao criar lead', [
+            'response_code' => $response_code,
+            'has_success' => isset($data['success']),
+            'success_value' => $data['success'] ?? null
+        ]);
+
+        // Check for successful response codes (200 for updates, 201 for creations)
+        if (($response_code === 200 || $response_code === 201) && isset($data['success']) && $data['success']) {
+            $this->logger->info('Lead criado com sucesso', [
+                'lead_id' => $data['data']['id'] ?? null
+            ]);
             return [
                 'success' => true,
                 'message' => __('Lead created successfully', 'iare-crm'),
@@ -144,10 +212,19 @@ class Client {
             ];
         }
 
+        $error_message = $data['error']['message'] ?? __('Failed to create lead', 'iare-crm');
+        $error_data = $data['error'] ?? null;
+        
+        $this->logger->error('Falha ao criar lead', [
+            'response_code' => $response_code,
+            'error_message' => $error_message,
+            'error_data' => $error_data
+        ]);
+
         return [
             'success' => false,
-            'message' => $data['error']['message'] ?? __('Failed to create lead', 'iare-crm'),
-            'data' => $data['error'] ?? null
+            'message' => $error_message,
+            'data' => $error_data
         ];
     }
 
@@ -161,6 +238,13 @@ class Client {
      * @return array|WP_Error Response or error
      */
     private function make_request($method, $endpoint, $data = [], $api_key = '') {
+        $this->logger->info('Realizando requisição HTTP para a API', [
+            'method' => $method,
+            'endpoint' => $endpoint,
+            'has_data' => !empty($data),
+            'has_api_key' => !empty($api_key)
+        ]);
+        
         $url = $this->base_url . IARE_CRM_API_ENDPOINT . $endpoint;
 
         $headers = [
@@ -195,7 +279,26 @@ class Client {
          */
         $args = apply_filters('iare_crm_api_request', $args, $method, $endpoint, $data, $api_key);
 
-        return wp_remote_request($url, $args);
+        $this->logger->info('Argumentos da requisição preparados', [
+            'url' => $url,
+            'method' => $args['method'],
+            'timeout' => $args['timeout']
+        ]);
+
+        $response = wp_remote_request($url, $args);
+        
+        if (is_wp_error($response)) {
+            $this->logger->error('Erro na requisição HTTP', [
+                'error_code' => $response->get_error_code(),
+                'error_message' => $response->get_error_message()
+            ]);
+        } else {
+            $this->logger->info('Requisição HTTP concluída com sucesso', [
+                'response_code' => wp_remote_retrieve_response_code($response)
+            ]);
+        }
+
+        return $response;
     }
 
     /**
@@ -204,7 +307,10 @@ class Client {
      * @return array Response with health status
      */
     public function health_check() {
+        $this->logger->info('Executando health check da API');
+        
         if (empty($this->base_url)) {
+            $this->logger->error('URL base da API não configurada no health check');
             return [
                 'success' => false,
                 'message' => __('API base URL is not configured', 'iare-crm')
@@ -214,6 +320,9 @@ class Client {
         $response = $this->make_request('GET', '/health');
 
         if (is_wp_error($response)) {
+            $this->logger->error('Erro no health check', [
+                'error' => $response->get_error_message()
+            ]);
             return [
                 'success' => false,
                 'message' => $response->get_error_message()
@@ -222,10 +331,16 @@ class Client {
 
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
+        $response_code = wp_remote_retrieve_response_code($response);
+
+        $this->logger->info('Health check concluído', [
+            'response_code' => $response_code,
+            'success' => $response_code === 200
+        ]);
 
         return [
-            'success' => wp_remote_retrieve_response_code($response) === 200,
-                            'message' => $data['message'] ?? __('Health check completed', 'iare-crm'),
+            'success' => $response_code === 200,
+            'message' => $data['message'] ?? __('Health check completed', 'iare-crm'),
             'data' => $data
         ];
     }
