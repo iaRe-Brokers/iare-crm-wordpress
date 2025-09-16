@@ -4,6 +4,7 @@ namespace IareCrm\Integrations\Elementor\FormActions;
 
 use IareCrm\Api\Client;
 use IareCrm\Helpers\Validator;
+use IareCrm\Helpers\Logger;
 use IareCrm\Integrations\Elementor\Services\FieldMapperService;
 use IareCrm\App\Services\GeolocationService;
 use ElementorPro\Modules\Forms\Classes\Action_Base;
@@ -18,6 +19,11 @@ defined('ABSPATH') || exit;
 class IareCrmAction extends Action_Base {
 
     const MAX_ADDITIONAL_INFO = 15;
+    private $logger = null;
+
+    public function __construct() {
+        $this->logger = new Logger();
+    }
 
     /**
      * Get action name
@@ -295,41 +301,54 @@ class IareCrmAction extends Action_Base {
      * @param \ElementorPro\Modules\Forms\Classes\Ajax_Handler $ajax_handler
      */
     public function run($record, $ajax_handler) {
+        $this->logger->info('Starting iaRe CRM form processing.');
+        
         $settings = $record->get('form_settings');
+        
+        // Log form settings
+        $this->logger->info('Form settings:', $settings);
 
-        // Validar campanhas usando o Validator
+        // Validate campaigns using Validator
         $campaigns_input = $settings['iare_crm_campaign'] ?? [];
+        $this->logger->info('Validating campaigns:', ['campaigns_input' => $campaigns_input]);
+        
         $validation_result = Validator::validate_campaigns($campaigns_input);
         
         if (!$validation_result['valid']) {
+            $this->logger->error('Campaign validation failed.', ['validation_result' => $validation_result]);
             return;
         }
         
         $campaigns = $validation_result['campaigns'];
+        $this->logger->info('Campaigns validated successfully.', ['campaigns' => $campaigns]);
 
         // Validate field mapping
         require_once IARE_CRM_PLUGIN_PATH . 'app/integrations/elementor/services/field-mapper-service.php';
+        $this->logger->info('Validating field mapping.');
         $validation = FieldMapperService::validate_field_mapping($settings);
         if (!$validation['valid']) {
+            $this->logger->error('Field mapping validation failed.', ['validation' => $validation]);
             return;
         }
+        $this->logger->info('Field mapping validated successfully.');
 
-        // Obter identificador único do formulário
+        // Get unique form identifier
         $post_id = get_the_ID();
         $widget_id = $record->get('form_settings')['id'] ?? 'unknown';
         $form_identifier = $this->generate_elementor_identifier($post_id, $widget_id);
+        $this->logger->info('Form identifier generated.', ['form_identifier' => $form_identifier]);
         
-        // Selecionar próxima campanha na rotação
+        // Select next campaign in rotation
         $selected_campaign = $this->get_next_campaign($campaigns, $form_identifier);
         
         if (!$selected_campaign) {
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('iaRe CRM: Failed to select campaign for form ' . $form_identifier);
-            }
+            $this->logger->error('Failed to select campaign for form.', ['form_identifier' => $form_identifier]);
             return;
         }
+        $this->logger->info('Campaign selected.', ['selected_campaign' => $selected_campaign]);
 
         $raw_fields = $record->get('fields');
+        $this->logger->info('Raw form data received.', ['raw_fields' => $raw_fields]);
 
         $fields = [];
         foreach ($raw_fields as $id => $field) {
@@ -337,18 +356,31 @@ class IareCrmAction extends Action_Base {
         }
 
         // Build lead data from mapped fields
+        $this->logger->info('Building lead data.');
         $lead_data = $this->build_lead_data($settings, $fields, $raw_fields);
+        $this->logger->info('Lead data built.', ['lead_data' => $lead_data]);
 
         // Apply filter to allow UTM data injection
+        $this->logger->info('Applying iare_crm_elementor_form_data filter.');
         $lead_data = apply_filters('iare_crm_elementor_form_data', $lead_data, $raw_fields);
+        $this->logger->info('iare_crm_elementor_form_data filter applied.', ['lead_data' => $lead_data]);
 
         $api_key = get_option(IARE_CRM_OPTION_API_KEY, '');
         if (empty($api_key)) {
+            $this->logger->error('API key not configured.');
             return;
         }
 
+        $this->logger->info('Calling API to create lead.', [
+            'api_key_exists' => !empty($api_key),
+            'selected_campaign' => $selected_campaign,
+            'lead_data_size' => strlen(json_encode($lead_data))
+        ]);
+        
         $api_client = new Client();
         $result = $api_client->create_lead($api_key, $selected_campaign, $lead_data);
+        
+        $this->logger->info('API call result:', ['result' => $result]);
     }
 
     /**
@@ -360,17 +392,20 @@ class IareCrmAction extends Action_Base {
      * @return array Lead data
      */
     private function build_lead_data($settings, $fields, $raw_fields = []) {
+        $this->logger->info('Starting lead data construction.');
         $lead_data = [];
 
         // Name (required)
         if (!empty($settings['iare_crm_name_field']) && !empty($fields[$settings['iare_crm_name_field']])) {
             $lead_data['name'] = sanitize_text_field($fields[$settings['iare_crm_name_field']]);
         }
+        $this->logger->info('Name field processed.', ['name' => $lead_data['name'] ?? 'Not provided']);
 
         // Surname (optional)
         if (!empty($settings['iare_crm_surname_field']) && !empty($fields[$settings['iare_crm_surname_field']])) {
             $lead_data['surname'] = sanitize_text_field($fields[$settings['iare_crm_surname_field']]);
         }
+        $this->logger->info('Surname field processed.', ['surname' => $lead_data['surname'] ?? 'Not provided']);
 
         // Phone country code
         if (!empty($settings['iare_crm_phone_country_code_field']) && !empty($fields[$settings['iare_crm_phone_country_code_field']])) {
@@ -378,60 +413,79 @@ class IareCrmAction extends Action_Base {
         } else {
             $lead_data['phone_country_code'] = sanitize_text_field($settings['iare_crm_default_country_code'] ?? '55');
         }
+        $this->logger->info('Phone country code processed.', ['phone_country_code' => $lead_data['phone_country_code']]);
 
         // Phone number (required)
         if (!empty($settings['iare_crm_phone_number_field']) && !empty($fields[$settings['iare_crm_phone_number_field']])) {
             $lead_data['phone_number'] = sanitize_text_field($fields[$settings['iare_crm_phone_number_field']]);
         }
+        $this->logger->info('Phone number processed.', ['phone_number' => $lead_data['phone_number'] ?? 'Not provided']);
 
         // Email (optional)
         if (!empty($settings['iare_crm_email_field']) && !empty($fields[$settings['iare_crm_email_field']])) {
             $lead_data['email'] = sanitize_email($fields[$settings['iare_crm_email_field']]);
         }
+        $this->logger->info('Email field processed.', ['email' => $lead_data['email'] ?? 'Not provided']);
 
         // Capture source
         $capture_source = !empty($settings['iare_crm_capture_source']) ? 
             sanitize_text_field($settings['iare_crm_capture_source']) : 'WordPress';
         $lead_data['capture_source'] = $capture_source;
+        $this->logger->info('Capture source processed.', ['capture_source' => $lead_data['capture_source']]);
 
         // Enterprise (optional)
         if (!empty($settings['iare_crm_enterprise_field']) && !empty($fields[$settings['iare_crm_enterprise_field']])) {
             $lead_data['enterprise'] = sanitize_text_field($fields[$settings['iare_crm_enterprise_field']]);
         }
+        $this->logger->info('Enterprise field processed.', ['enterprise' => $lead_data['enterprise'] ?? 'Not provided']);
 
         // Position (optional)
         if (!empty($settings['iare_crm_position_field']) && !empty($fields[$settings['iare_crm_position_field']])) {
             $lead_data['position'] = sanitize_text_field($fields[$settings['iare_crm_position_field']]);
         }
+        $this->logger->info('Position field processed.', ['position' => $lead_data['position'] ?? 'Not provided']);
 
         // Profession (optional)
         if (!empty($settings['iare_crm_profession_field']) && !empty($fields[$settings['iare_crm_profession_field']])) {
             $lead_data['profession'] = sanitize_text_field($fields[$settings['iare_crm_profession_field']]);
         }
+        $this->logger->info('Profession field processed.', ['profession' => $lead_data['profession'] ?? 'Not provided']);
 
         // Gender (optional)
         if (!empty($settings['iare_crm_gender_field']) && !empty($fields[$settings['iare_crm_gender_field']])) {
             $lead_data['gender'] = sanitize_text_field($fields[$settings['iare_crm_gender_field']]);
         }
+        $this->logger->info('Gender field processed.', ['gender' => $lead_data['gender'] ?? 'Not provided']);
 
         // Location data (automatic or manual)
+        $this->logger->info('Processing location data.');
         $this->process_location_data($settings, $fields, $lead_data);
+        $this->logger->info('Location data processed.', ['location_data' => [
+            'city' => $lead_data['city'] ?? 'Not provided',
+            'state' => $lead_data['state'] ?? 'Not provided',
+            'country' => $lead_data['country'] ?? 'Not provided'
+        ]]);
 
         // Additional info from unmapped fields
+        $this->logger->info('Building additional information.');
         $additional_info = $this->build_additional_info($settings, $fields, $raw_fields);
         if (!empty($additional_info)) {
             $lead_data['additional_info'] = $additional_info;
         }
+        $this->logger->info('Additional information built.', ['additional_info_count' => count($additional_info ?? [])]);
 
         /**
-         * Filtro para dados do lead antes do envio
+         * Filter for lead data before sending
          * 
-         * @param array $lead_data Dados do lead
-         * @param array $settings Configurações do formulário
-         * @param array $fields Campos enviados
+         * @param array $lead_data Lead data
+         * @param array $settings Form settings
+         * @param array $fields Submitted fields
          * @since 1.0.0
          */
-        return apply_filters('iare_crm_lead_data', $lead_data, $settings, $fields);
+        $filtered_lead_data = apply_filters('iare_crm_lead_data', $lead_data, $settings, $fields);
+        $this->logger->info('iare_crm_lead_data filter applied.');
+        
+        return $filtered_lead_data;
     }
 
     /**
@@ -444,13 +498,16 @@ class IareCrmAction extends Action_Base {
      */
     private function process_location_data($settings, $fields, &$lead_data) {
         $auto_location_enabled = !empty($settings['iare_crm_auto_location']) && $settings['iare_crm_auto_location'] === 'yes';
+        $this->logger->info('Automatic location processing is ' . ($auto_location_enabled ? 'enabled' : 'disabled'));
         
         if ($auto_location_enabled) {
             // Use automatic location capture
+            $this->logger->info('Starting automatic location capture via IP.');
             $geolocation_service = new GeolocationService();
             $location_data = $geolocation_service->getLocationByIp();
             
             if ($location_data && $location_data['status'] === 'success') {
+                $this->logger->info('Automatic location obtained successfully.', ['location_data' => $location_data]);
                 $formatted_location = $geolocation_service->formatLocationData($location_data);
                 
                 if (!empty($formatted_location['city'])) {
@@ -464,14 +521,13 @@ class IareCrmAction extends Action_Base {
                 if (!empty($formatted_location['country'])) {
                     $lead_data['country'] = $formatted_location['country'];
                 }
+                $this->logger->info('Location data formatted.', ['formatted_location' => $formatted_location]);
             } else {
-                // Log failed automatic location capture
-                if (defined('WP_DEBUG') && WP_DEBUG) {
-                    error_log('iaRe CRM: Failed to capture automatic location data');
-                }
+                $this->logger->warning('Failed to capture automatic location data.');
             }
         } else {
             // Use manual field mapping
+            $this->logger->info('Using manual location field mapping.');
             if (!empty($settings['iare_crm_city_field']) && !empty($fields[$settings['iare_crm_city_field']])) {
                 $lead_data['city'] = sanitize_text_field($fields[$settings['iare_crm_city_field']]);
             }
@@ -483,6 +539,11 @@ class IareCrmAction extends Action_Base {
             if (!empty($settings['iare_crm_country_field']) && !empty($fields[$settings['iare_crm_country_field']])) {
                 $lead_data['country'] = sanitize_text_field($fields[$settings['iare_crm_country_field']]);
             }
+            $this->logger->info('Manual location fields processed.', [
+                'city' => $lead_data['city'] ?? 'Not provided',
+                'state' => $lead_data['state'] ?? 'Not provided',
+                'country' => $lead_data['country'] ?? 'Not provided'
+            ]);
         }
     }
 
@@ -527,7 +588,7 @@ class IareCrmAction extends Action_Base {
             $clean_url = strtok($current_url, '?');
             
             $additional_info[] = [
-                'title' => __('URL Cadastro', 'iare-crm'),
+                'title' => __('Registration URL', 'iare-crm'),
                 'value' => $clean_url
             ];
             $count++;
@@ -716,35 +777,35 @@ class IareCrmAction extends Action_Base {
     }
 
     /**
-     * Gerar identificador único para formulário Elementor
+     * Generate unique identifier for Elementor form
      * 
-     * @param int $post_id ID do post
-     * @param string $widget_id ID do widget
-     * @return string Identificador único
+     * @param int $post_id Post ID
+     * @param string $widget_id Widget ID
+     * @return string Unique identifier
      */
     private function generate_elementor_identifier($post_id, $widget_id) {
         return 'elementor_' . $post_id . '_' . $widget_id;
     }
 
     /**
-     * Obter próxima campanha na rotação
+     * Get next campaign in rotation
      * 
-     * @param array $campaign_ids Array de IDs das campanhas
-     * @param string $form_identifier Identificador único do formulário
-     * @return string|null ID da próxima campanha ou null se erro
+     * @param array $campaign_ids Array of campaign IDs
+     * @param string $form_identifier Unique form identifier
+     * @return string|null Next campaign ID or null if error
      */
     private function get_next_campaign($campaign_ids, $form_identifier) {
-        // Se apenas uma campanha, retornar diretamente
+        // If only one campaign, return directly
         if (count($campaign_ids) === 1) {
             return $campaign_ids[0];
         }
 
-        // Obter dados de rotação
+        // Get rotation data
         $rotation_data = $this->get_rotation_data($form_identifier);
         
-        // Verificar se as campanhas mudaram
+        // Check if campaigns have changed
         if ($rotation_data['campaigns'] !== $campaign_ids) {
-            // Resetar rotação com novas campanhas
+            // Reset rotation with new campaigns
             $rotation_data = [
                 'campaigns' => $campaign_ids,
                 'last_used_index' => -1,
@@ -755,11 +816,11 @@ class IareCrmAction extends Action_Base {
             ];
         }
         
-        // Calcular próximo índice
+        // Calculate next index
         $next_index = ($rotation_data['last_used_index'] + 1) % count($campaign_ids);
         $selected_campaign = $campaign_ids[$next_index];
         
-        // Atualizar dados de rotação
+        // Update rotation data
         $rotation_data['last_used_index'] = $next_index;
         $rotation_data['last_used_id'] = $selected_campaign;
         $rotation_data['updated_at'] = current_time('mysql');
@@ -771,10 +832,10 @@ class IareCrmAction extends Action_Base {
     }
 
     /**
-     * Obter dados de rotação para um formulário
+     * Get rotation data for a form
      * 
-     * @param string $form_identifier Identificador único do formulário
-     * @return array Dados de rotação
+     * @param string $form_identifier Unique form identifier
+     * @return array Rotation data
      */
     private function get_rotation_data($form_identifier) {
         $option_key = 'iare_crm_rotation_' . $form_identifier;
@@ -791,10 +852,10 @@ class IareCrmAction extends Action_Base {
     }
 
     /**
-     * Atualizar dados de rotação
+     * Update rotation data
      * 
-     * @param string $form_identifier Identificador único do formulário
-     * @param array $rotation_data Dados de rotação
+     * @param string $form_identifier Unique form identifier
+     * @param array $rotation_data Rotation data
      */
     private function update_rotation_data($form_identifier, $rotation_data) {
         $option_key = 'iare_crm_rotation_' . $form_identifier;
