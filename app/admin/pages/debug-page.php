@@ -20,6 +20,7 @@ class DebugPage {
         
         add_action('admin_init', [$this, 'handle_form_submission']);
         add_action('admin_post_iare_crm_clear_debug_logs', [$this, 'handle_clear_logs']);
+        add_action('admin_post_iare_crm_download_debug_logs', [$this, 'handle_download_logs']);
     }
 
     
@@ -65,6 +66,33 @@ class DebugPage {
         $this->logger->clear_logs();
         
         wp_redirect(add_query_arg(['page' => 'iare-crm-debug', 'updated' => 'true'], admin_url('admin.php')));
+        exit;
+    }
+
+    /**
+     * Handle download logs request
+     */
+    public function handle_download_logs() {
+        if (!current_user_can('manage_iare_crm_debug')) {
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'iare-crm'));
+        }
+
+        if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'iare_crm_download_logs')) {
+            wp_die(esc_html__('Security check failed.', 'iare-crm'));
+        }
+
+        if (!file_exists($this->logger->get_log_file_path())) {
+            wp_die(esc_html__('Log file does not exist.', 'iare-crm'));
+        }
+
+        $timestamp = date('Y-m-d-H-i-s');
+        $filename = "iarecrm-debug-{$timestamp}.log";
+
+        header('Content-Type: text/plain');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . filesize($this->logger->get_log_file_path()));
+
+        readfile($this->logger->get_log_file_path());
         exit;
     }
 
