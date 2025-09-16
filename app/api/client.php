@@ -156,11 +156,7 @@ class Client {
     public function create_lead($api_key, $campaign_id, $lead_data) {
         $this->logger->info('Criando lead na API', [
             'campaign_id' => $campaign_id,
-            'lead_data' => [
-                'name' => $lead_data['name'] ?? '',
-                'phone_number' => $lead_data['phone_number'] ?? '',
-                'email' => $lead_data['email'] ?? ''
-            ]
+            'lead_data' => $lead_data
         ]);
         
         // Validate lead data
@@ -197,7 +193,8 @@ class Client {
         $this->logger->info('Resposta da API ao criar lead', [
             'response_code' => $response_code,
             'has_success' => isset($data['success']),
-            'success_value' => $data['success'] ?? null
+            'success_value' => $data['success'] ?? null,
+            'response_body' => $data
         ]);
 
         // Check for successful response codes (200 for updates, 201 for creations)
@@ -241,7 +238,7 @@ class Client {
         $this->logger->info('Realizando requisição HTTP para a API', [
             'method' => $method,
             'endpoint' => $endpoint,
-            'has_data' => !empty($data),
+            'data_keys' => array_keys($data),
             'has_api_key' => !empty($api_key)
         ]);
         
@@ -265,6 +262,16 @@ class Client {
 
         if (!empty($data) && in_array($method, ['POST', 'PUT', 'PATCH'])) {
             $args['body'] = json_encode($data);
+            // Log the full data being sent, but not sensitive information
+            $this->logger->info('Dados sendo enviados para a API', [
+                'sanitized_data' => [
+                    'name' => $data['name'] ?? '',
+                    'phone_number' => $data['phone_number'] ?? '',
+                    'email' => $data['email'] ?? '',
+                    'has_additional_info' => !empty($data['additional_info']),
+                    'capture_source' => $data['capture_source'] ?? ''
+                ]
+            ]);
         }
 
         /**
@@ -282,7 +289,8 @@ class Client {
         $this->logger->info('Argumentos da requisição preparados', [
             'url' => $url,
             'method' => $args['method'],
-            'timeout' => $args['timeout']
+            'timeout' => $args['timeout'],
+            'has_body' => !empty($args['body'])
         ]);
 
         $response = wp_remote_request($url, $args);
