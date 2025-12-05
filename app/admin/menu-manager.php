@@ -19,7 +19,8 @@ class MenuManager {
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
         add_action('admin_init', [$this, 'hide_wordpress_notices'], 1);
         add_action('admin_head', [$this, 'hide_wordpress_notices_late'], 999);
-        
+        add_filter('plugin_action_links_' . IARE_CRM_PLUGIN_BASENAME, [$this, 'add_plugin_action_links']);
+
         $this->settings_page = SettingsPage::get_instance();
         $this->debug_page = DebugPage::get_instance();
     }
@@ -44,7 +45,6 @@ class MenuManager {
             [$this->settings_page, 'render']
         );
         
-        // Add debug submenu
         add_submenu_page(
             'iare-crm',
             __('Debug Settings', 'iare-crm'),
@@ -53,6 +53,24 @@ class MenuManager {
             'iare-crm-debug',
             [$this->debug_page, 'render']
         );
+    }
+
+    /**
+     * Add action links to plugin listing page
+     *
+     * @param array $links Existing plugin action links.
+     * @return array Modified plugin action links.
+     */
+    public function add_plugin_action_links($links) {
+        $settings_link = sprintf(
+            '<a href="%s">%s</a>',
+            admin_url('admin.php?page=iare-crm'),
+            __('Settings', 'iare-crm')
+        );
+
+        array_unshift($links, $settings_link);
+
+        return $links;
     }
 
     private function get_menu_icon() {
@@ -83,7 +101,6 @@ c36 -33 69 -66 72 -75 12 -30 5 -63 -16 -83 -29 -27 -57 -25 -98 5 -43 32 -71
             IARE_CRM_VERSION
         );
 
-        // Enqueue additional CSS for debug page
         if (strpos($hook, 'iare-crm-debug') !== false) {
             wp_enqueue_style(
                 'iare-crm-debug',
