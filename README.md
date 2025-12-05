@@ -1,6 +1,6 @@
 # iaRe CRM - Plugin WordPress
 
-[![WordPress](https://img.shields.io/badge/WordPress-6.0+-blue.svg)](https://wordpress.org/)
+[![WordPress](https://img.shields.io/badge/WordPress-6.3+-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-GPL%20v2+-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![Elementor](https://img.shields.io/badge/Elementor-Compatible-orange.svg)](https://elementor.com/)
@@ -29,10 +29,10 @@ Plugin WordPress para integração completa com o sistema iaRe CRM, permitindo c
 
 | Componente | Versão Mínima | Recomendado |
 |------------|---------------|-------------|
-| WordPress | 6.0 | 6.8+ |
+| WordPress | 6.3 | 6.0+ |
 | PHP | 7.4 | 8.1+ |
 | MySQL | 5.7 | 8.0+ |
-| Elementor | 3.8 | Última versão |
+| Elementor | 3.8 | 3.33+ |
 
 ## 📦 Instalação
 
